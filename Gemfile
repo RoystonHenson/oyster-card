@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
-ruby '3.0.0'
+source "https://rubygems.org”
 
-gem 'rspec'
+ruby '3.3.4'
+
+group :test, :development do
+  gem 'rspec'
+end
