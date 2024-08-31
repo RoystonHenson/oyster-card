@@ -1,3 +1,7 @@
-In order to use public transport,
 As a customer,
+In order to use public transport,
 I want money on my card.
+
+As a customer,
+In order to keep using public transport,
+I want to add money to my card.
