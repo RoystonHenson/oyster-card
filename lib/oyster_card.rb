@@ -11,15 +11,11 @@ class OysterCard
 
   def top_up(amount)
     check_max_balance(amount)
-    if !is_eligible?(amount)
+    if !eligible?(amount)
       raise 'You must enter a number to top up your card!'
-    elsif is_eligible?(amount)
+    elsif eligible?(amount)
       @balance += amount.abs
     end
-  end
-
-  def deduct(amount)
-    @balance -= amount
   end
 
   def touch_in
@@ -27,8 +23,9 @@ class OysterCard
     @touched_in = true
   end
 
-  def touch_out
+  def touch_out(fare)
     @touched_in = false
+    deduct(fare)
   end
 
   def in_journey?
@@ -41,11 +38,15 @@ class OysterCard
     raise "You cannot exceed £#{MAX_BALANCE} on the card!" if balance + amount.to_f > MAX_BALANCE
   end
 
-  def is_eligible?(amount)
+  def eligible?(amount)
     amount.is_a?(Integer) || amount.is_a?(Float)
   end
 
   def check_balance
     raise "You must have at least £#{MIN_BALANCE} to enter! Please top up!" if balance < MIN_BALANCE
+  end
+
+  def deduct(amount)
+    @balance -= amount
   end
 end
