@@ -13,3 +13,7 @@ I want top-up to only accept a number.
 As a customer,
 In order to protect my money from theft or loss,
 I want a maximum limit (of £90) on my card.
+
+As a customer,
+In order to pay for my journey,
+I need my fare deducted from my card.

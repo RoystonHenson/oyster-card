@@ -29,4 +29,11 @@ describe OysterCard do
       end
     end
   end
+
+  describe '#deduct' do
+    it 'deducts the fare from the balance' do
+      oyster_card.deduct(5)
+      expect(oyster_card.balance).to eq(0)
+    end
+  end
 end
