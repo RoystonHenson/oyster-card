@@ -21,3 +21,7 @@ I need my fare deducted from my card.
 As a customer,
 In order to get through the barriers,
 I need to touch in and out.
+
+As a customer,
+In order to pay for my journey,
+I need to have the minimum amount (£1) for a single journey.

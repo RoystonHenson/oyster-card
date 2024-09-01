@@ -2,6 +2,7 @@ class OysterCard
   attr_accessor :balance, :in_journey
 
   MAX_BALANCE = 90
+  MIN_BALANCE = 1
 
   def initialize
     @balance = 5.00
@@ -22,6 +23,7 @@ class OysterCard
   end
 
   def touch_in
+    check_balance
     @touched_in = true
   end
 
@@ -41,5 +43,9 @@ class OysterCard
 
   def is_eligible?(amount)
     amount.is_a?(Integer) || amount.is_a?(Float)
+  end
+
+  def check_balance
+    raise "You must have at least £#{MIN_BALANCE} to enter! Please top up!" if balance < MIN_BALANCE
   end
 end

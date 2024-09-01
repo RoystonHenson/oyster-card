@@ -42,9 +42,18 @@ describe OysterCard do
   end
 
   describe '#touch_in' do
-    it 'touches the card in' do
-      oyster_card.touch_in
-      expect(oyster_card).to be_in_journey
+    context 'when the balance is above minimum balance' do
+      it 'touches the card in' do
+        oyster_card.touch_in
+        expect(oyster_card).to be_in_journey
+      end
+    end
+
+    context 'when the balance isn\'t above minimum balance' do
+      it 'raises error for not being above minimum balance' do
+        oyster_card.deduct(4.1)
+        expect { oyster_card.touch_in }.to raise_error(RuntimeError, "You must have at least £#{OysterCard::MIN_BALANCE} to enter! Please top up!")
+      end
     end
   end
 
