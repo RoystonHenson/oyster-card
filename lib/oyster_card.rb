@@ -1,21 +1,28 @@
 class OysterCard
   attr_accessor :balance
 
+  MAX_BALANCE = 90
+
   def initialize
     @balance = 5.00
   end
 
   def top_up(amount)
-    if amount.is_a?(Integer) || amount.is_a?(Float)
-      @balance += amount.abs
-    elsif !amount.is_a?(Integer) || !amount.is_a?(Float)
+    check_max_balance(amount)
+    if !is_eligible?(amount)
       raise 'You must enter a number to top up your card!'
+    elsif is_eligible?(amount)
+      @balance += amount.abs
     end
-=begin
-    elsif amount * -1 == amount.abs
-      raise 'The number must be positive!'
-    end
-=end      
-    
+  end
+
+  private
+
+  def check_max_balance(amount)
+    raise "You cannot exceed £#{MAX_BALANCE} on the card!" if balance + amount.to_f > MAX_BALANCE
+  end
+
+  def is_eligible?(amount)
+    amount.is_a?(Integer) || amount.is_a?(Float)
   end
 end

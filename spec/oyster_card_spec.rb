@@ -11,18 +11,22 @@ describe OysterCard do
   end
 
   describe '#top_up' do
-    it 'adds money to the balance' do
-      oyster_card.top_up(5)
-      expect(oyster_card.balance).to eq(10)
+    context 'when balance below max' do
+      it 'adds money to the balance' do
+        oyster_card.top_up(5)
+        expect(oyster_card.balance).to eq(10)
+      end
+
+      it 'raises error when not given a number' do
+        expect { oyster_card.top_up('a') }.to raise_error(RuntimeError, 'You must enter a number to top up your card!')
+      end
     end
 
-    it 'raises error when not given a number' do
-      expect { oyster_card.top_up('a') }.to raise_error(RuntimeError, 'You must enter a number to top up your card!')
+    context 'when balance above max' do
+      it 'raises error for exceeding max balance' do
+        oyster_card.balance = 89
+        expect { oyster_card.top_up(1.1) }.to raise_error(RuntimeError, "You cannot exceed £#{OysterCard::MAX_BALANCE} on the card!")
+      end
     end
-=begin
-    it 'raises error when given a negative number' do
-      expect {oyster_card.top_up(-5) }.to raise_error(RuntimeError, 'The number entered must be positive!')
-    end
-=end
   end
 end
