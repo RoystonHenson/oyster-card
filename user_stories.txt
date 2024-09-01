@@ -29,3 +29,7 @@ I need to have the minimum amount (£1) for a single journey.
 As a customer,
 In order to pay for my journey,
 When my journey is complete, I need the correct amount deducted from my card.
+
+As a customer,
+In order to pay for my journey,
+I need to know where I've travelled from.

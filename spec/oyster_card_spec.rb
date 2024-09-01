@@ -2,6 +2,7 @@ require 'oyster_card'
 
 describe OysterCard do
   let(:oyster_card) { OysterCard.new }
+  let(:station) { double('station', name: 'box hill') }
 
   describe '#initialize' do
     it 'has a starting balance of 5' do
@@ -36,8 +37,8 @@ describe OysterCard do
 
   describe '#touch_in' do
     context 'when the balance is above minimum balance' do
-      it 'touches the card in' do
-        oyster_card.touch_in
+      it 'touches the card in', tag: true do
+        oyster_card.touch_in(station.name)
         expect(oyster_card).to be_in_journey
       end
     end
@@ -45,14 +46,14 @@ describe OysterCard do
     context 'when the balance isn\'t above minimum balance' do
       it 'raises error for not being above minimum balance' do
         oyster_card.balance = 0.9
-        expect { oyster_card.touch_in }.to raise_error(RuntimeError, "You must have at least £#{OysterCard::MIN_BALANCE} to enter! Please top up!")
+        expect { oyster_card.touch_in(station.name) }.to raise_error(RuntimeError, "You must have at least £#{OysterCard::MIN_BALANCE} to enter! Please top up!")
       end
     end
   end
 
   describe '#touch_out' do
     it 'touches the card out' do
-      oyster_card.touch_in
+      oyster_card.touch_in(station.name)
       oyster_card.touch_out(1)
       expect(oyster_card).not_to be_in_journey
     end
@@ -66,7 +67,7 @@ describe OysterCard do
   describe '#in_journey?' do
     it 'tells you if it is in journey or not' do
     expect(oyster_card).not_to be_in_journey
-    oyster_card.touch_in
+    oyster_card.touch_in(station.name)
     expect(oyster_card).to be_in_journey
     oyster_card.touch_out(1)
     expect(oyster_card).not_to be_in_journey
