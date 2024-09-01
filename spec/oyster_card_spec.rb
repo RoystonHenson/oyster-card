@@ -8,6 +8,10 @@ describe OysterCard do
     expect(oyster_card.balance).to eq(5)
     expect(oyster_card.balance).to be_a(Float)
     end
+
+    it 'is not in journey when new' do
+      expect(oyster_card).not_to be_in_journey
+    end
   end
 
   describe '#top_up' do
@@ -34,6 +38,31 @@ describe OysterCard do
     it 'deducts the fare from the balance' do
       oyster_card.deduct(5)
       expect(oyster_card.balance).to eq(0)
+    end
+  end
+
+  describe '#touch_in' do
+    it 'touches the card in' do
+      oyster_card.touch_in
+      expect(oyster_card).to be_in_journey
+    end
+  end
+
+  describe '#touch_out' do
+    it 'touches the card out' do
+      oyster_card.touch_in
+      oyster_card.touch_out
+      expect(oyster_card).not_to be_in_journey
+    end
+  end
+
+  describe '#in_journey?' do
+    it 'tells you if it is in journey or not' do
+    expect(oyster_card).not_to be_in_journey
+    oyster_card.touch_in
+    expect(oyster_card).to be_in_journey
+    oyster_card.touch_out
+    expect(oyster_card).not_to be_in_journey
     end
   end
 end
