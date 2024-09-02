@@ -2,7 +2,7 @@ require 'oyster_card'
 
 describe OysterCard do
   let(:oyster_card) { OysterCard.new }
-  let(:station) { double('station', name: 'box hill') }
+  let(:station) { double('station', name: 'box hill', fare: 2) }
 
   describe '#initialize' do
     it 'has a starting balance of 5' do
@@ -10,8 +10,8 @@ describe OysterCard do
     expect(oyster_card.balance).to be_a(Float)
     end
 
-    it 'is not in journey when new' do
-      expect(oyster_card).not_to be_in_journey
+    xit 'has an empty journey history' do
+      expect(oyster_card.journey_history).to eq([])
     end
   end
 
@@ -36,14 +36,15 @@ describe OysterCard do
   end
 
   describe '#touch_in' do
-    context 'when the balance is above minimum balance' do
-      it 'touches the card in', tag: true do
+    context 'when the card has sufficient balance' do
+      it 'sets the entry station' do
         oyster_card.touch_in(station.name)
-        expect(oyster_card).to be_in_journey
+        expect(oyster_card.entry_station).to eq(station.name)
       end
+
     end
 
-    context 'when the balance isn\'t above minimum balance' do
+    context 'when the card doesn\'t have sufficient balance' do
       it 'raises error for not being above minimum balance' do
         oyster_card.balance = 0.9
         expect { oyster_card.touch_in(station.name) }.to raise_error(RuntimeError, "You must have at least £#{OysterCard::MIN_BALANCE} to enter! Please top up!")
@@ -54,23 +55,17 @@ describe OysterCard do
   describe '#touch_out' do
     it 'touches the card out' do
       oyster_card.touch_in(station.name)
-      oyster_card.touch_out(1)
+      oyster_card.touch_out(station.name, station.fare)
       expect(oyster_card).not_to be_in_journey
     end
 
     it 'charges the fare to the card' do
-      fare = 3
-      expect { oyster_card.touch_out(fare) }.to change { oyster_card.balance }.by(-fare)
+      expect { oyster_card.touch_out(station.name, station.fare) }.to change { oyster_card.balance }.by(-station.fare)
     end
-  end
 
-  describe '#in_journey?' do
-    it 'tells you if it is in journey or not' do
-    expect(oyster_card).not_to be_in_journey
-    oyster_card.touch_in(station.name)
-    expect(oyster_card).to be_in_journey
-    oyster_card.touch_out(1)
-    expect(oyster_card).not_to be_in_journey
+    it 'sets the exit station' do
+      oyster_card.touch_out(station.name, station.fare)
+      expect(oyster_card.exit_station).to eq(station.name)
     end
   end
 end

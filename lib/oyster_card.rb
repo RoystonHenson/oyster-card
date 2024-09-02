@@ -1,12 +1,14 @@
 class OysterCard
-  attr_accessor :balance, :entry_station
+  attr_accessor :balance, :entry_station, :exit_station
 
+  STARTING_BALANCE = 5.00
   MAX_BALANCE = 90
   MIN_BALANCE = 1
 
   def initialize
-    @balance = 5.00
+    @balance = STARTING_BALANCE
     @entry_station = nil
+    @exit_station = nil
   end
 
   def top_up(amount)
@@ -19,9 +21,10 @@ class OysterCard
     @entry_station = station_name
   end
 
-  def touch_out(fare)
-    @entry_station = nil
+  def touch_out(station_name, fare)
+    @exit_station = station_name
     deduct(fare)
+    @entry_station = nil
   end
 
   def in_journey?
