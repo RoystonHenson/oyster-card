@@ -10,7 +10,7 @@ class OysterCard
     @balance = STARTING_BALANCE
     @entry_station = nil
     @exit_station = nil
-    @current_journey = []
+    @current_journey = {}
     @journey_history = []
   end
 
@@ -23,12 +23,12 @@ class OysterCard
     check_balance
     @entry_station = station_name
     @exit_station = nil
-    @current_journey << @entry_station
+    @current_journey[:entry_station] = @entry_station
   end
 
   def touch_out(station_name, fare)
     @exit_station = station_name
-    @current_journey << @exit_station
+    @current_journey[:exit_station] = @exit_station
     @journey_history << @current_journey
     deduct(fare)
     @entry_station = nil

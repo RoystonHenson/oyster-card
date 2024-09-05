@@ -12,7 +12,7 @@ describe OysterCard do
     end
 
     it 'has an empty current journey' do
-      expect(oyster_card.current_journey).to eq([])
+      expect(oyster_card.current_journey).to eq({})
     end
 
     it 'has an empty journey history' do
@@ -70,7 +70,8 @@ describe OysterCard do
     it 'saves the current journey to journey history' do
       oyster_card.touch_in(station1.name)
       oyster_card.touch_out(station2.name, station2.fare)
-      expect(oyster_card.journey_history).to eq([[station1.name, station2.name]])
+      p oyster_card.current_journey
+      expect(oyster_card.journey_history).to eq([{entry_station: station1.name, exit_station: station2.name}])
     end
   end
 end
