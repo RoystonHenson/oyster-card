@@ -1,4 +1,5 @@
 class OysterCard
+  attr_reader :current_journey, :journey_history
   attr_accessor :balance, :entry_station, :exit_station
 
   STARTING_BALANCE = 5.00
@@ -9,6 +10,8 @@ class OysterCard
     @balance = STARTING_BALANCE
     @entry_station = nil
     @exit_station = nil
+    @current_journey = []
+    @journey_history = []
   end
 
   def top_up(amount)
@@ -19,10 +22,14 @@ class OysterCard
   def touch_in(station_name)
     check_balance
     @entry_station = station_name
+    @exit_station = nil
+    @current_journey << @entry_station
   end
 
   def touch_out(station_name, fare)
     @exit_station = station_name
+    @current_journey << @exit_station
+    @journey_history << @current_journey
     deduct(fare)
     @entry_station = nil
   end

@@ -2,7 +2,8 @@ require 'oyster_card'
 
 describe OysterCard do
   let(:oyster_card) { OysterCard.new }
-  let(:station) { double('station', name: 'box hill', fare: 2) }
+  let(:station1)  { double('station1' , name: 'Boxwood') }
+  let(:station2) { double('station2', name: 'Cloverhoof', fare: 2) }
 
   describe '#initialize' do
     it 'has a starting balance of 5' do
@@ -10,7 +11,11 @@ describe OysterCard do
     expect(oyster_card.balance).to be_a(Float)
     end
 
-    xit 'has an empty journey history' do
+    it 'has an empty current journey' do
+      expect(oyster_card.current_journey).to eq([])
+    end
+
+    it 'has an empty journey history' do
       expect(oyster_card.journey_history).to eq([])
     end
   end
@@ -38,8 +43,8 @@ describe OysterCard do
   describe '#touch_in' do
     context 'when the card has sufficient balance' do
       it 'sets the entry station' do
-        oyster_card.touch_in(station.name)
-        expect(oyster_card.entry_station).to eq(station.name)
+        oyster_card.touch_in(station1.name)
+        expect(oyster_card.entry_station).to eq(station1.name)
       end
 
     end
@@ -47,25 +52,25 @@ describe OysterCard do
     context 'when the card doesn\'t have sufficient balance' do
       it 'raises error for not being above minimum balance' do
         oyster_card.balance = 0.9
-        expect { oyster_card.touch_in(station.name) }.to raise_error(RuntimeError, "You must have at least £#{OysterCard::MIN_BALANCE} to enter! Please top up!")
+        expect { oyster_card.touch_in(station1.name) }.to raise_error(RuntimeError, "You must have at least £#{OysterCard::MIN_BALANCE} to enter! Please top up!")
       end
     end
   end
 
   describe '#touch_out' do
-    it 'touches the card out' do
-      oyster_card.touch_in(station.name)
-      oyster_card.touch_out(station.name, station.fare)
-      expect(oyster_card).not_to be_in_journey
-    end
-
     it 'charges the fare to the card' do
-      expect { oyster_card.touch_out(station.name, station.fare) }.to change { oyster_card.balance }.by(-station.fare)
+      expect { oyster_card.touch_out(station2.name, station2.fare) }.to change { oyster_card.balance }.by(-station2.fare)
     end
 
     it 'sets the exit station' do
-      oyster_card.touch_out(station.name, station.fare)
-      expect(oyster_card.exit_station).to eq(station.name)
+      oyster_card.touch_out(station2.name, station2.fare)
+      expect(oyster_card.exit_station).to eq(station2.name)
+    end
+
+    it 'saves the current journey to journey history' do
+      oyster_card.touch_in(station1.name)
+      oyster_card.touch_out(station2.name, station2.fare)
+      expect(oyster_card.journey_history).to eq([[station1.name, station2.name]])
     end
   end
 end
