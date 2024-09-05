@@ -44,7 +44,7 @@ describe OysterCard do
     context 'when the card has sufficient balance' do
       it 'sets the entry station' do
         oyster_card.touch_in(station1.name)
-        expect(oyster_card.entry_station).to eq(station1.name)
+        expect(oyster_card.current_journey[:entry_station]).to eq(station1.name)
       end
 
     end
@@ -64,13 +64,12 @@ describe OysterCard do
 
     it 'sets the exit station' do
       oyster_card.touch_out(station2.name, station2.fare)
-      expect(oyster_card.exit_station).to eq(station2.name)
+      expect(oyster_card.current_journey[:exit_station]).to eq(station2.name)
     end
 
     it 'saves the current journey to journey history' do
       oyster_card.touch_in(station1.name)
       oyster_card.touch_out(station2.name, station2.fare)
-      p oyster_card.current_journey
       expect(oyster_card.journey_history).to eq([{entry_station: station1.name, exit_station: station2.name}])
     end
   end
