@@ -41,3 +41,7 @@ I need to know where I've travelled to.
 As a customer,
 In order to know where I have been,
 I want to see all my previous trips.
+
+As a customer,
+In order to know how far I have travelled,
+I want to know what zone a station is in.
