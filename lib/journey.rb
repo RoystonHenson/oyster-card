@@ -2,6 +2,7 @@ class Journey
   attr_accessor :current_journey, :journey_history, :fare
 
   MINIMUM_FARE = 1
+  PENALTY_FARE = 6
 
   def initialize(fare=MINIMUM_FARE)
     @current_journey = {}
@@ -24,7 +25,7 @@ class Journey
   end
 
   def fare
-    @fare = MINIMUM_FARE
+    complete? ? @fare = MINIMUM_FARE : @fare = PENALTY_FARE
   end
 
   private
