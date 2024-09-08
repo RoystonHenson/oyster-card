@@ -1,7 +1,9 @@
 class Journey
-  attr_accessor :current_journey, :journey_history
+  attr_accessor :current_journey, :journey_history, :fare
 
-  def initialize
+  MINIMUM_FARE = 1
+
+  def initialize(fare=MINIMUM_FARE)
     @current_journey = {}
     @journey_history = []
   end
@@ -14,10 +16,15 @@ class Journey
   def finish(place)
     current_journey[:destination] = place
     journey_history << current_journey
+    fare
   end
 
   def complete?
     current_journey[:origin] != nil && current_journey[:destination] != nil
+  end
+
+  def fare
+    @fare = MINIMUM_FARE
   end
 
   private

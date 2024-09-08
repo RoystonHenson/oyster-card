@@ -9,6 +9,10 @@ describe Journey do
     it 'has an empty current journey' do
       expect(journey.current_journey).to eq({})
     end
+
+    it 'has an empty journey history' do
+      expect(journey.journey_history).to eq([])
+    end
   end
 
   describe '#start' do
@@ -52,5 +56,11 @@ describe Journey do
         expect(journey).to be_complete
       end
     end
+  end
+
+  describe '#fare' do
+      it 'returns minimum fare' do
+        expect(journey.fare).to eq(Journey::MINIMUM_FARE)    
+      end    
   end
 end
