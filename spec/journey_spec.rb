@@ -58,24 +58,25 @@ describe Journey do
     end
   end
 
-  describe '#fare' do
+  describe '#calculate_fare' do
     context 'when journey started and finished' do  
       it 'sets fare to minimum fare' do
-        journey.current_journey = {origin: 'Boxwood', destination: 'Cloverhoof'}
+        journey.start(location1)
+        journey.finish(location2)
         expect(journey.fare).to eq(Journey::MINIMUM_FARE)    
       end
     end
 
     context 'when journey started but not finished' do
       it 'sets fare to penalty fare' do
-        journey.current_journey = {origin: 'Boxwood', destination: nil}
+        journey.start(location1)
         expect(journey.fare).to eq(Journey::PENALTY_FARE)
       end
     end
 
     context 'when journey finished but not started' do
       it 'sets fare to penalty fare' do
-        journey.current_journey = {origin: nil, destination: 'Cloverhoof'}
+        journey.finish(location2)
         expect(journey.fare).to eq(Journey::PENALTY_FARE)
       end
     end
