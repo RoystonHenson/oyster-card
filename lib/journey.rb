@@ -10,7 +10,7 @@ class Journey
   end
 
   def start(place)
-    complete? ? reset_current_journey : calculate_fare
+    @fare = PENALTY_FARE if current_journey[:origin] != nil
     current_journey[:origin] = place
   end
 
@@ -18,6 +18,7 @@ class Journey
     current_journey[:destination] = place
     journey_history << current_journey
     calculate_fare
+    reset_current_journey
   end
 
   def complete?

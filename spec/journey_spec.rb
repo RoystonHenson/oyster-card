@@ -25,7 +25,7 @@ describe Journey do
   describe '#finish' do
     it 'sets the journey destination' do
       journey.finish(location2.name)
-      expect(journey.current_journey[:destination]).to eq(location2.name)
+      expect(journey.journey_history[0][:destination]).to eq(location2.name)
     end
 
     it 'saves the current journey to journey history' do
@@ -70,6 +70,7 @@ describe Journey do
     context 'when journey started but not finished' do
       it 'sets fare to penalty fare' do
         journey.start(location1)
+        journey.start(location2)
         expect(journey.fare).to eq(Journey::PENALTY_FARE)
       end
     end
