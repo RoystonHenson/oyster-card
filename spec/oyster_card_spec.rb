@@ -28,4 +28,11 @@ describe OysterCard do
       end
     end
   end
+
+  describe '#deduct' do
+    it 'subtracts a fare from the card\'s balance' do
+      fare = 1
+      expect { oyster_card.deduct(fare) }.to change { oyster_card.balance }.by(-fare)
+    end
+  end
 end
