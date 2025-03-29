@@ -3,6 +3,7 @@ class
     attr_reader :balance, :in_journey
 
   OPENING_BALANCE = 0
+  MIN_FARE = 1
   MAX_BALANCE = 90
 
   def initialize
@@ -19,7 +20,7 @@ class
   end
 
   def touch_in
-    @in_journey = true
+    @balance >= MIN_FARE ? @in_journey = true : raise('Insufficient balance. Please top up.')
   end
 
   def touch_out
@@ -33,7 +34,9 @@ class
   private
 
   def verify_top_up_amount(amount)
-    @balance + amount <= MAX_BALANCE ? @balance += amount : raise("This transaction would exceed the card limit of #{MAX_BALANCE}. Please top up a smaller amount.")
+    @balance + amount <= MAX_BALANCE ? @balance += amount : raise(
+      "This transaction would exceed the card limit of £#{MAX_BALANCE}. "\
+      "The maximum you can top up is £#{MAX_BALANCE - @balance}.")
   end
 
   def reduce_balance(amount)
