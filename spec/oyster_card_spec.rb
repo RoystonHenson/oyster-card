@@ -33,12 +33,6 @@ describe OysterCard do
     end
   end
 
-  describe '#deduct' do
-    it 'subtracts a fare from the card\'s balance' do
-      expect { oyster_card.deduct(OysterCard::MIN_FARE) }.to change { oyster_card.balance }.by(-OysterCard::MIN_FARE)
-    end
-  end
-
   describe '#touch_in' do
     context 'when card balance is above minimum for starting a journey' do
       it 'touches a card in, beginning a journey' do
@@ -49,10 +43,6 @@ describe OysterCard do
     end
 
     context 'when card balance is below minimum for starting a journey' do
-      before(:each) do
-        oyster_card.deduct(1)
-      end
-
       it 'will throw an error' do
         expect { oyster_card.touch_in }.to raise_error(RuntimeError, 'Insufficient balance. Please top up.')
       end
@@ -64,19 +54,26 @@ describe OysterCard do
   end
 
   describe '#touch_out' do
-    it 'touches a card out, ending a journey' do
+    before(:each) do
       oyster_card.top_up(OysterCard::MIN_FARE)
       oyster_card.touch_in
+    end
+
+    it 'touches a card out, ending a journey' do
       oyster_card.touch_out
       expect(oyster_card.in_journey).to eq(false)
     end 
+
+    it "reduces card balance by £#{OysterCard::MIN_FARE}" do
+      expect { oyster_card.touch_out }.to change { oyster_card.balance }.by(-OysterCard::MIN_FARE)
+    end
   end
 
   describe '#in_journey?' do
     before(:each) do
       oyster_card.top_up(OysterCard::MIN_FARE)
     end
-    
+
     context 'when in journey' do  
       it 'returns true' do
         oyster_card.touch_in

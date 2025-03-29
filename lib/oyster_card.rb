@@ -15,16 +15,13 @@ class
     verify_top_up_amount(amount)
   end
 
-  def deduct(fare)
-   reduce_balance(fare)
-  end
-
   def touch_in
     @balance >= MIN_FARE ? @in_journey = true : raise('Insufficient balance. Please top up.')
   end
 
   def touch_out
     @in_journey = false
+    deduct(MIN_FARE)
   end
 
   def in_journey?
@@ -39,7 +36,7 @@ class
       "The maximum you can top up is £#{MAX_BALANCE - @balance}.")
   end
 
-  def reduce_balance(amount)
-    @balance -= amount
+  def deduct(fare)
+    @balance -= fare
   end
 end
