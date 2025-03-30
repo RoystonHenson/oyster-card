@@ -1,10 +1,10 @@
 require 'station'
 
 describe Station do
-  let(:station) { Station.new('Boxwood', 1) }
-  
-  describe '#initalize' do
-    it 'has a name' do
+  let(:station) { Station.new('Boxwood', 1) } 
+
+  describe '#initialize' do
+    it 'has a name' do  
       expect(station.name).to eq('Boxwood')
     end
 
