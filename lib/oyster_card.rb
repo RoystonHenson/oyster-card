@@ -18,13 +18,13 @@ class
 
   def touch_in(station)
     @balance >= MIN_FARE ? @current_journey[:entry_station] = station : raise('Insufficient balance. Please top up.')
-    
   end
 
   def touch_out(station)
     deduct(MIN_FARE)
     @current_journey[:exit_station] = station
-    @current_journey[:entry_station] = nil
+    @journey_history << @current_journey.clone
+    reset_journey
   end
 
   def in_journey?
@@ -41,5 +41,10 @@ class
 
   def deduct(fare)
     @balance -= fare
+  end
+
+  def reset_journey
+    @current_journey[:entry_station] = nil
+    @current_journey[:exit_station] = nil
   end
 end

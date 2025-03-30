@@ -70,12 +70,22 @@ describe OysterCard do
 
     it 'saves exit station' do
       oyster_card.touch_out(exit_station)
-      expect(oyster_card.current_journey[:exit_station]).to eq(exit_station)
+      expect(oyster_card.journey_history.last[:exit_station]).to eq(exit_station)
+    end
+
+    it 'saves completed journey in journey history' do
+      oyster_card.touch_out(exit_station)
+      expect(oyster_card.journey_history).to eq([{entry_station: entry_station, exit_station: exit_station}])
     end
 
     it 'sets entry station back to nil' do
       oyster_card.touch_out(exit_station)
       expect(oyster_card.current_journey[:entry_station]).to eq(nil)
+    end
+
+    it 'sets exit station back to nil' do
+      oyster_card.touch_out(exit_station)
+      expect(oyster_card.current_journey[:exit_station]).to eq(nil)
     end
 
     it "reduces card balance by £#{OysterCard::MIN_FARE}" do
