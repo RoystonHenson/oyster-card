@@ -10,4 +10,8 @@ class Journey
   def self.history
     @@history
   end
+
+  def start(station)
+    @current_journey[:entry_station] = station
+  end
 end

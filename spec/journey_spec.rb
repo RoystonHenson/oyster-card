@@ -2,7 +2,8 @@ require 'journey'
 
 describe Journey do
   let(:journey) { Journey.new }
-  let(:station) { double('entry station')}
+  let(:entry_station) { double('entry station')}
+  let(:exit_station) { double('exit_station') }
 
   describe '.history' do
     it 'is initialised as empty' do
@@ -17,6 +18,13 @@ describe Journey do
 
     it 'has unassigned exit station for current journey' do
       expect(journey.current_journey[:exit_station]).to eq(nil)
+    end
+  end
+
+  describe '#start' do
+    it 'adds entry station to current journey' do
+      journey.start(entry_station)
+      expect(journey.current_journey[:entry_station]).to eq(entry_station)
     end
   end
 end
