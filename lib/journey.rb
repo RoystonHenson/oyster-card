@@ -4,7 +4,7 @@ class Journey
   attr_reader :current_journey
 
   def initialize
-    @current_journey = {entry_station: nil, entry_station: nil}
+    @current_journey = {entry_station: nil, exit_station: nil}
   end
 
   def self.history
@@ -13,5 +13,9 @@ class Journey
 
   def start(station)
     @current_journey[:entry_station] = station
+  end
+
+  def finish(station)
+    @current_journey[:exit_station] = station
   end
 end
