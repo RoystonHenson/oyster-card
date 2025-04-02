@@ -1,37 +1,7 @@
 class Journey
-  attr_accessor :current_journey, :journey_history, :fare
+  attr_reader :current_journey
 
-  MINIMUM_FARE = 1
-  PENALTY_FARE = 6
-
-  def initialize(fare=MINIMUM_FARE)
-    @current_journey = {}
-    @journey_history = []
-  end
-
-  def start(place)
-    @fare = PENALTY_FARE if current_journey[:origin] != nil
-    current_journey[:origin] = place
-  end
-
-  def finish(place)
-    current_journey[:destination] = place
-    journey_history << current_journey
-    calculate_fare
-    reset_current_journey
-  end
-
-  def complete?
-    current_journey[:origin] != nil && current_journey[:destination] != nil
-  end
-
-  def calculate_fare
-    complete? ? @fare = MINIMUM_FARE : @fare = PENALTY_FARE
-  end
-
-  private
-
-  def reset_current_journey
-    @current_journey = {origin: nil, destination: nil}
+  def initialize(station)
+    @current_journey = {entry_station: station}
   end
 end
