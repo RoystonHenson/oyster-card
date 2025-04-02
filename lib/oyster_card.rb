@@ -1,3 +1,5 @@
+require_relative 'station'
+
 class
   OysterCard
     attr_reader :balance, :journey_history, :current_journey
@@ -9,7 +11,7 @@ class
   def initialize
     @balance = OPENING_BALANCE
     @journey_history = []
-    @current_journey = {entry_station: nil}
+    @current_journey = {entry_station: nil, exit_station: nil}
   end
 
   def top_up(amount)

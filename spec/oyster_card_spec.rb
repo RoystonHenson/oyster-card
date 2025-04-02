@@ -17,6 +17,10 @@ describe OysterCard do
     it 'has no logged entry station' do
       expect(oyster_card.current_journey[:entry_station]).to eq(nil)
     end
+
+    it 'has no logged exit station' do
+      expect(oyster_card.current_journey[:exit_station]).to eq(nil)
+    end
   end
 
   describe '#top_up' do
