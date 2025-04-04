@@ -1,13 +1,12 @@
 require 'oyster_card'
-#require 'journey'
 
 describe OysterCard do
   let(:oyster_card)   { OysterCard.new(journey) }
-  let(:journey)       { instance_double(Journey)}
+  let(:journey)       { double(Journey)}
   let(:entry_station) { double('entry station') }
   let(:exit_station)  { double('exit station') }
 
-  describe '#initialize', :tag => true do
+  describe '#initialize' do
     it 'has an opening balance of 0' do
       expect(oyster_card.balance).to eq(0)
     end

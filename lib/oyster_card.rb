@@ -19,8 +19,7 @@ class
   end
 
   def touch_in(station)
-    @journey.start(station)
-    @balance >= MIN_FARE ? @current_journey[:entry_station] = station : raise('Insufficient balance. Please top up.')
+    @balance >= MIN_FARE ? @journey.start(station) : raise('Insufficient balance. Please top up.')
   end
 
   def touch_out(station)
