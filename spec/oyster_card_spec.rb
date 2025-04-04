@@ -1,25 +1,19 @@
 require 'oyster_card'
+#require 'journey'
 
 describe OysterCard do
-  let(:oyster_card)   { OysterCard.new }
+  let(:oyster_card)   { OysterCard.new(journey) }
+  let(:journey)       { instance_double(Journey)}
   let(:entry_station) { double('entry station') }
   let(:exit_station)  { double('exit station') }
 
-  describe '#initialize' do
+  describe '#initialize', :tag => true do
     it 'has an opening balance of 0' do
       expect(oyster_card.balance).to eq(0)
     end
 
-    it 'has an empty journey history' do
-      expect(oyster_card.journey_history).to eq([])
-    end
-
-    it 'has no logged entry station' do
-      expect(oyster_card.current_journey[:entry_station]).to eq(nil)
-    end
-
-    it 'has no logged exit station' do
-      expect(oyster_card.current_journey[:exit_station]).to eq(nil)
+    it 'has an instance of the journey class injected' do
+      expect(oyster_card.journey).to eq(journey)
     end
   end
 
@@ -49,9 +43,9 @@ describe OysterCard do
         oyster_card.top_up(OysterCard::MIN_FARE)
       end
 
-      it 'saves entry station' do
+      it 'passes entry station to journey class' do
+        expect(journey).to receive(:start).with(entry_station)
         oyster_card.touch_in(entry_station)
-        expect(oyster_card.current_journey[:entry_station]).to eq(entry_station)
       end
     end
 
@@ -69,12 +63,21 @@ describe OysterCard do
   describe '#touch_out' do
     before(:each) do
       oyster_card.top_up(OysterCard::MIN_FARE)
+      allow(journey).to receive(:start)
       oyster_card.touch_in(entry_station)
     end
 
     it 'saves exit station' do
       oyster_card.touch_out(exit_station)
       expect(oyster_card.journey_history.last[:exit_station]).to eq(exit_station)
+    end
+
+    it 'passes exit station to journey class' do
+      #expect(oyster_card.journey_history.last[:exit_station]).to eq(exit_station)
+      #oyster_card.touch_out(exit_station)
+
+      expect(journey).to receive(:finish).with(exit_station)
+      oyster_card.touch_out(exit_station)
     end
 
     it 'saves completed journey in journey history' do

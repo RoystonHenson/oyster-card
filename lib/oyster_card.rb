@@ -1,17 +1,17 @@
+require_relative 'journey'
 require_relative 'station'
 
 class
   OysterCard
-    attr_reader :balance, :journey_history, :current_journey
+    attr_reader :balance, :journey_history, :current_journey, :journey
 
   OPENING_BALANCE = 0
   MIN_FARE = 1                    
   MAX_BALANCE = 90
 
-  def initialize
+  def initialize(journey)
     @balance = OPENING_BALANCE
-    @journey_history = []
-    @current_journey = {entry_station: nil, exit_station: nil}
+    @journey = journey
   end
 
   def top_up(amount)
@@ -19,6 +19,7 @@ class
   end
 
   def touch_in(station)
+    @journey.start(station)
     @balance >= MIN_FARE ? @current_journey[:entry_station] = station : raise('Insufficient balance. Please top up.')
   end
 
