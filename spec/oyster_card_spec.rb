@@ -66,15 +66,7 @@ describe OysterCard do
       oyster_card.touch_in(entry_station)
     end
 
-    it 'saves exit station' do
-      oyster_card.touch_out(exit_station)
-      expect(oyster_card.journey_history.last[:exit_station]).to eq(exit_station)
-    end
-
     it 'passes exit station to journey class' do
-      #expect(oyster_card.journey_history.last[:exit_station]).to eq(exit_station)
-      #oyster_card.touch_out(exit_station)
-
       expect(journey).to receive(:finish).with(exit_station)
       oyster_card.touch_out(exit_station)
     end

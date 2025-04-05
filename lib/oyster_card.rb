@@ -24,9 +24,7 @@ class
 
   def touch_out(station)
     deduct(MIN_FARE)
-    @current_journey[:exit_station] = station
-    @journey_history << @current_journey.clone
-    reset_journey
+    @journey.finish(station)
   end
 
   def in_journey?
@@ -43,10 +41,5 @@ class
 
   def deduct(fare)
     @balance -= fare
-  end
-
-  def reset_journey
-    @current_journey[:entry_station] = nil
-    @current_journey[:exit_station] = nil
   end
 end
