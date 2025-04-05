@@ -36,17 +36,29 @@ describe Journey do
   end
 
   describe '#finish' do
-    it 'saves exit stattion to current journey' do
+    before(:each) do
+      Journey.class_variable_set(:@@history, [])
+    end
+
+    it 'saves exit station when finishing journey' do
       journey.finish(exit_station)
-      expect(journey.current_journey[:exit_station]).to eq(exit_station)
+      expect(Journey.history.last[:exit_station]).to eq(exit_station)
+    end
+
+    it 'saves completed journey to journey history' do
+      journey.start(entry_station)
+      journey.finish(exit_station)
+      expect(Journey.history).to eq([{entry_station: entry_station, exit_station: exit_station}])
+    end
+
+    it 'clears current journey after saving it to journey history' do
+      journey.start(entry_station)
+      journey.finish(exit_station)
+      expect(journey.current_journey).to eq({entry_station: nil, exit_station: nil})
     end
   end
 
   describe '#complete?' do
-    #before(:each) do
-    #  oyster_card.top_up(OysterCard::MIN_FARE)
-    #end
-
     context 'when in journey' do  
       it 'returns false' do
         journey.start(entry_station)
