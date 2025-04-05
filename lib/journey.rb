@@ -18,4 +18,8 @@ class Journey
   def finish(station)
     @current_journey[:exit_station] = station
   end
+
+  def complete?
+    @current_journey[:entry_station].nil? == false && @current_journey[:exit_station].nil? == false 
+  end
 end
