@@ -16,20 +16,22 @@ class Journey
   end
 
   def start(station)
-    if @current_journey[:entry_station] == nil
-      @current_journey[:entry_station] = station 
+    if entry_station_reset?
+      start_journey(station)
     elsif @current_journey[:entry_station] == station
       raise('You have already touched in at this station!')
     else
-      @fare = PENALTY_FARE
-      raise "You failed to complete your last journey correctly. You will be charged £#{PENALTY_FARE} for this journey."
+      apply_penalty
     end
   end
 
   def finish(station)
-    @current_journey[:exit_station] = station
-    @@history << @current_journey
-    reset_current_journey
+    if entry_station_set?
+      finish_journey(station)
+      reset_current_journey
+    else
+      apply_penalty
+    end
   end
 
   def complete?
@@ -39,10 +41,33 @@ class Journey
   def check_journey_start
   complete? ? @current_journey[:entry_station] = station : raise()
   end
-  
+
   private
 
   def reset_current_journey
     @current_journey = {entry_station: nil, exit_station: nil}
+  end
+
+  def entry_station_reset?
+    @current_journey[:entry_station].nil?
+  end
+
+  def start_journey(station)
+    @fare = MIN_FARE
+    @current_journey[:entry_station] = station 
+  end
+
+  def apply_penalty
+    @fare = PENALTY_FARE
+    raise "You failed to complete your last journey correctly. You will be charged £#{PENALTY_FARE} for this journey."
+  end
+
+  def entry_station_set?
+    !@current_journey[:entry_station].nil?
+  end
+
+  def finish_journey(station)
+    @current_journey[:exit_station] = station
+    @@history << @current_journey
   end
 end
