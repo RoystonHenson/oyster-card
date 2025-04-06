@@ -1,10 +1,14 @@
 class Journey
   @@history = []
 
-  attr_reader :current_journey
+  MIN_FARE = 1
+  PENALTY_FARE = 100
+
+  attr_reader :current_journey, :fare
 
   def initialize
     @current_journey = {entry_station: nil, exit_station: nil}
+    @fare = MIN_FARE
   end
 
   def self.history
@@ -12,7 +16,14 @@ class Journey
   end
 
   def start(station)
-    @current_journey[:entry_station] = station
+    if @current_journey[:entry_station] == nil
+      @current_journey[:entry_station] = station 
+    elsif @current_journey[:entry_station] == station
+      raise('You have already touched in at this station!')
+    else
+      @fare = PENALTY_FARE
+      raise "You failed to complete your last journey correctly. You will be charged £#{PENALTY_FARE} for this journey."
+    end
   end
 
   def finish(station)
@@ -25,8 +36,12 @@ class Journey
     @current_journey[:entry_station].nil? == true && @current_journey[:exit_station].nil? == true 
   end
 
-  private
+  def check_journey_start
+  complete? ? @current_journey[:entry_station] = station : raise()
+  end
   
+  private
+
   def reset_current_journey
     @current_journey = {entry_station: nil, exit_station: nil}
   end

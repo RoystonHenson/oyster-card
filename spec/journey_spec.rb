@@ -1,9 +1,10 @@
 require 'journey'
 
 describe Journey do
-  let(:journey) { Journey.new }
+  let(:journey)       { Journey.new }
   let(:entry_station) { double('entry station')}
-  let(:exit_station) { double('exit_station')}
+  let(:exit_station)  { double('exit_station')}
+  let(:third_station) { double('third station')}
 
   describe '.history' do
     it 'is initialised as empty' do
@@ -26,12 +27,44 @@ describe Journey do
     it 'exit station key is nil' do
       expect(journey.current_journey[:exit_station]).to eq(nil)
     end
+
+    it 'sets fare to minimum fare' do
+      expect(journey.fare).to eq(Journey::MIN_FARE)
+    end
   end
 
   describe '#start' do
-    it 'saves entry station to current journey' do
+    before(:each) do
       journey.start(entry_station)
-      expect(journey.current_journey[:entry_station]).to eq(entry_station)
+    end
+
+    context 'when entry and exit stations are correctly not set' do
+      it 'saves entry station to current journey' do
+        expect(journey.current_journey[:entry_station]).to eq(entry_station)
+      end
+
+      it 'sets fare to minimum fare' do
+        expect(journey.fare).to eq(Journey::MIN_FARE)
+      end
+    end
+
+    context 'when entry station is already set to the current station' do
+      it 'throws an error' do
+        expect { journey.start(entry_station) }.to raise_error(
+          RuntimeError, 'You have already touched in at this station!')
+      end
+    end
+
+    context 'when entry station is already set to a different station' do
+      it 'throws an error' do
+        expect { journey.start(third_station) }.to raise_error(
+          RuntimeError, "You failed to complete your last journey correctly. "\
+          "You will be charged £#{Journey::PENALTY_FARE} for this journey.")
+      end
+
+      it 'sets fare to penalty fare' do
+        expect { journey.start(third_station) rescue nil }.to change { journey.fare} .to eq(Journey::PENALTY_FARE)
+      end
     end
   end
 
