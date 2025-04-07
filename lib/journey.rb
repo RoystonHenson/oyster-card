@@ -8,7 +8,7 @@ class Journey
   def initialize
     @current_journey = {entry_station: nil, exit_station: nil}
     @fare = MIN_FARE
-    @last_journey = []
+    @last_journey = nil
   end
 
   def start(station)
@@ -53,6 +53,6 @@ class Journey
 
   def finish_journey(station)
     @current_journey[:exit_station] = station
-    @last_journey << @current_journey
+    @last_journey = @current_journey.clone
   end
 end

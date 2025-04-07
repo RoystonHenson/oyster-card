@@ -38,7 +38,7 @@ describe Journey do
     end
 
     it 'has an empty last journey' do
-      expect(journey.last_journey).to eq([])
+      expect(journey.last_journey).to eq(nil)
     end
   end
 
@@ -82,21 +82,17 @@ describe Journey do
   end
 
   describe '#finish' do
-    before(:each) do
-      Journey.class_variable_set(:@@history, [])
-    end
-
     context 'when the current journey correctly has an entry station set' do
       it 'saves exit station when finishing journey' do
         journey.start(entry_station)
         journey.finish(exit_station)
-        expect(journey.last_journey.last[:exit_station]).to eq(exit_station)
+        expect(journey.last_journey[:exit_station]).to eq(exit_station)
       end
 
       it 'copies current journey to last journey before reset' do
         journey.start(entry_station)
         journey.finish(exit_station)
-        expect(journey.last_journey).to eq([{entry_station: entry_station, exit_station: exit_station}])
+        expect(journey.last_journey).to eq({entry_station: entry_station, exit_station: exit_station})
       end
 
       it 'clears current journey after saving it to journey history' do
