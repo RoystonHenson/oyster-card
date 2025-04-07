@@ -11,6 +11,10 @@ describe OysterCard do
       expect(oyster_card.balance).to eq(0)
     end
 
+    it 'has an empty journey history' do
+      expect(oyster_card.journey_history).to eq([])
+    end
+
     it 'injects an instance of the journey class to journey' do
       expect(oyster_card.journey).to eq(journey)
     end
@@ -69,6 +73,7 @@ describe OysterCard do
       allow(journey).to receive(:start).with(entry_station)
       allow(journey).to receive(:finish).with(exit_station)
       allow(journey).to receive(:fare).and_return(1)
+      allow(journey).to receive(:last_journey).and_return('test')
       oyster_card.touch_in(entry_station)
     end
 
@@ -79,6 +84,12 @@ describe OysterCard do
 
     it "reduces card balance" do
       expect { oyster_card.touch_out(exit_station) }.to change { oyster_card.balance }.by(-1)
+    end
+
+    it 'saves the finished journey to it\'s history' do
+      #oyster_card.touch_out(exit_station)
+      #expect(oyster_card.journey_history).to eq(['test'])
+      expect { oyster_card.touch_out(exit_station) }.to change { oyster_card.journey_history }.to eq(['test'])
     end
   end
 end

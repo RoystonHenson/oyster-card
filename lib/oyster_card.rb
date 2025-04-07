@@ -2,14 +2,14 @@ require_relative 'journey'
 require_relative 'station'
 
 class OysterCard
-    attr_reader :balance, :journey, :minimum_fare
+  attr_reader :balance, :journey_history, :minimum_fare, :journey
 
   OPENING_BALANCE = 0      
-  #MIN_FARE = Journey::MIN_FARE  
   MAX_BALANCE = 90
 
   def initialize(minimum_fare=Journey::MIN_FARE, journey=Journey.new)
     @balance = OPENING_BALANCE
+    @journey_history = []
     @minimum_fare = minimum_fare
     @journey = journey
   end
@@ -24,6 +24,7 @@ class OysterCard
 
   def touch_out(station)
     @journey.finish(station)
+    @journey_history << @journey.last_journey
     deduct_fare
   end
 
