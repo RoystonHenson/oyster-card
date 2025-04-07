@@ -4,11 +4,12 @@ class Journey
   MIN_FARE = 1
   PENALTY_FARE = 100
 
-  attr_reader :current_journey, :fare
+  attr_reader :current_journey, :fare, :last_journey
 
   def initialize
     @current_journey = {entry_station: nil, exit_station: nil}
     @fare = MIN_FARE
+    @last_journey = []
   end
 
   def self.history
@@ -26,14 +27,11 @@ class Journey
   end
 
   def finish(station)
-    if entry_station_set?
-      finish_journey(station)
-      reset_current_journey
-    else
-      apply_penalty
-    end
+    apply_penalty unless entry_station_set?
+    finish_journey(station)
+    reset_current_journey
   end
-
+  
   private
 
   def reset_current_journey
@@ -60,6 +58,7 @@ class Journey
 
   def finish_journey(station)
     @current_journey[:exit_station] = station
+    @last_journey << @current_journey
     @@history << @current_journey
   end
 end

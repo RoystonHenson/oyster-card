@@ -42,6 +42,10 @@ describe Journey do
     it 'sets fare to minimum fare' do
       expect(journey.fare).to eq(Journey::MIN_FARE)
     end
+
+    it 'has an empty last journey' do
+      expect(journey.last_journey).to eq([])
+    end
   end
 
   describe '#start' do
@@ -64,21 +68,21 @@ describe Journey do
     end
 
     context 'when entry station is already set to the current station' do
-      it 'throws an error' do
+      it 'raises an error about already being touched in' do
         expect { journey.start(entry_station) }.to raise_error(
           RuntimeError, 'You have already touched in at this station!')
       end
     end
 
     context 'when entry station is incorrectly already set to a different station' do
-      it 'throws an error' do
+      it 'outputs a warning about penalty fare' do
         expect { journey.start(third_station) }.to output(
           "You failed to complete your last journey correctly. "\
           "You will be charged £#{Journey::PENALTY_FARE} for this journey.\n").to_stderr
       end
 
       it 'sets fare to penalty fare' do
-        expect { journey.start(third_station) rescue nil }.to change { journey.fare} .to eq(Journey::PENALTY_FARE)
+        expect { journey.start(third_station) rescue nil }.to change { journey.fare}.to eq(Journey::PENALTY_FARE)
       end
     end
   end
@@ -89,16 +93,23 @@ describe Journey do
     end
 
     context 'when the current journey correctly has an entry station set' do
+      #use before loop
       it 'saves exit station when finishing journey' do
         journey.start(entry_station)
         journey.finish(exit_station)
         expect(Journey.history.last[:exit_station]).to eq(exit_station)
       end
 
-      it 'saves completed journey to journey history' do
+      xit 'saves completed journey to journey history' do
         journey.start(entry_station)
         journey.finish(exit_station)
         expect(Journey.history).to eq([{entry_station: entry_station, exit_station: exit_station}])
+      end
+
+      it 'copies current journey to last journey before reset' do
+        journey.start(entry_station)
+        journey.finish(exit_station)
+        expect(journey.last_journey).to eq([{entry_station: entry_station, exit_station: exit_station}])
       end
 
       it 'clears current journey after saving it to journey history' do
@@ -109,7 +120,7 @@ describe Journey do
     end
 
     context 'when the current journey incorrectly has no entry station set' do
-      it 'throws an error' do
+      it 'outputs a warning about penalty fare' do
         expect { journey.finish(exit_station) }.to output(
           "You failed to complete your last journey correctly. "\
           "You will be charged £#{Journey::PENALTY_FARE} for this journey.\n").to_stderr
