@@ -2,9 +2,13 @@ require 'oyster_card'
 
 describe OysterCard do
   let(:oyster_card)   { OysterCard.new(1, journey) }
-  let(:journey)       { double(Journey)}
-  let(:entry_station) { double('entry station') }
-  let(:exit_station)  { double('exit station') }
+  let(:journey)       { double(Journey,
+                               start: entry_station,
+                               finish: exit_station,
+                               fare: 1,
+                               last_journey: :test)}
+  let(:entry_station) { double(:entry_station) }
+  let(:exit_station)  { double(:exit_station) }
 
   describe '#initialize' do
     it 'has an opening balance of 0' do
@@ -53,7 +57,7 @@ describe OysterCard do
   describe '#touch_in' do
     context 'when card has sufficient balance to start a journey' do
       it 'passes entry station to journey class' do
-        oyster_card.instance_variable_set(:@balance, 1)
+        oyster_card.top_up(1)
         expect(journey).to receive(:start).with(entry_station)
         oyster_card.touch_in(entry_station)
       end
@@ -69,11 +73,7 @@ describe OysterCard do
 
   describe '#touch_out' do
     before(:each) do
-      oyster_card.instance_variable_set(:@balance, 1)
-      allow(journey).to receive(:start).with(entry_station)
-      allow(journey).to receive(:finish).with(exit_station)
-      allow(journey).to receive(:fare).and_return(1)
-      allow(journey).to receive(:last_journey).and_return('test')
+      oyster_card.top_up(1)
       oyster_card.touch_in(entry_station)
     end
 
@@ -87,9 +87,7 @@ describe OysterCard do
     end
 
     it 'saves the finished journey to it\'s history' do
-      #oyster_card.touch_out(exit_station)
-      #expect(oyster_card.journey_history).to eq(['test'])
-      expect { oyster_card.touch_out(exit_station) }.to change { oyster_card.journey_history }.to eq(['test'])
+      expect { oyster_card.touch_out(exit_station) }.to change { oyster_card.journey_history }.to eq([:test])
     end
   end
 end
