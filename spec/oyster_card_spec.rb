@@ -1,7 +1,7 @@
 require 'oyster_card'
 
 describe OysterCard do
-  let(:oyster_card)   { OysterCard.new(journey) }
+  let(:oyster_card)   { OysterCard.new(1, journey) }
   let(:journey)       { double(Journey)}
   let(:entry_station) { double('entry station') }
   let(:exit_station)  { double('exit station') }
@@ -11,8 +11,18 @@ describe OysterCard do
       expect(oyster_card.balance).to eq(0)
     end
 
-    it 'has an instance of the journey class injected' do
+    it 'injects an instance of the journey class to journey' do
       expect(oyster_card.journey).to eq(journey)
+    end
+    
+    it 'sets minimum_fare without an argument passed in' do
+      stub_const('Journey::MIN_FARE', 1)
+      expect(oyster_card.minimum_fare).to eq(1)
+    end
+
+    it 'sets minimum_fare with an argument passed in' do
+      oyster_card = OysterCard.new(5)
+      expect(oyster_card.minimum_fare).to eq(5)
     end
   end
 

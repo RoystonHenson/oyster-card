@@ -2,14 +2,15 @@ require_relative 'journey'
 require_relative 'station'
 
 class OysterCard
-    attr_reader :balance, :journey
+    attr_reader :balance, :journey, :minimum_fare
 
   OPENING_BALANCE = 0      
-  MIN_FARE = Journey::MIN_FARE  
+  #MIN_FARE = Journey::MIN_FARE  
   MAX_BALANCE = 90
 
-  def initialize(journey)
+  def initialize(minimum_fare=Journey::MIN_FARE, journey=Journey.new)
     @balance = OPENING_BALANCE
+    @minimum_fare = minimum_fare
     @journey = journey
   end
 
@@ -18,7 +19,7 @@ class OysterCard
   end
 
   def touch_in(station)
-    @balance >= MIN_FARE ? @journey.start(station) : raise('Insufficient balance. Please top up.')
+    @balance >= @minimum_fare ? @journey.start(station) : raise('Insufficient balance. Please top up.')
   end
 
   def touch_out(station)
