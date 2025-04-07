@@ -24,7 +24,7 @@ class OysterCard
 
   def touch_out(station)
     @journey.finish(station)
-    @journey_history << @journey.last_journey
+    add_to_history
     deduct_fare
   end
 
@@ -38,5 +38,9 @@ class OysterCard
 
   def deduct_fare
     @balance -= @journey.fare
+  end
+
+  def add_to_history
+    @journey_history << @journey.last_journey
   end
 end
