@@ -34,14 +34,6 @@ class Journey
     end
   end
 
-  def complete?
-    @current_journey[:entry_station].nil? == true && @current_journey[:exit_station].nil? == true 
-  end
-
-  def check_journey_start
-  complete? ? @current_journey[:entry_station] = station : raise()
-  end
-
   private
 
   def reset_current_journey
@@ -59,7 +51,7 @@ class Journey
 
   def apply_penalty
     @fare = PENALTY_FARE
-    raise "You failed to complete your last journey correctly. You will be charged £#{PENALTY_FARE} for this journey."
+    warn "You failed to complete your last journey correctly. You will be charged £#{PENALTY_FARE} for this journey."
   end
 
   def entry_station_set?

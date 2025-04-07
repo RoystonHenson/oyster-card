@@ -6,6 +6,17 @@ describe Journey do
   let(:exit_station)  { double('exit_station')}
   let(:third_station) { double('third station')}
 
+  before(:each) do
+    @original_stderr = $stderr
+    @file = File.open(File::NULL, 'w')
+    $stderr = @file
+  end
+
+  after(:each) do
+    $stderr = @original_stderr
+    @file.close
+  end
+
   describe '.history' do
     it 'is initialised as empty' do
       expect(journey.class.history).to eq([])
@@ -61,9 +72,9 @@ describe Journey do
 
     context 'when entry station is incorrectly already set to a different station' do
       it 'throws an error' do
-        expect { journey.start(third_station) }.to raise_error(
-          RuntimeError, "You failed to complete your last journey correctly. "\
-          "You will be charged £#{Journey::PENALTY_FARE} for this journey.")
+        expect { journey.start(third_station) }.to output(
+          "You failed to complete your last journey correctly. "\
+          "You will be charged £#{Journey::PENALTY_FARE} for this journey.\n").to_stderr
       end
 
       it 'sets fare to penalty fare' do
@@ -99,30 +110,13 @@ describe Journey do
 
     context 'when the current journey incorrectly has no entry station set' do
       it 'throws an error' do
-        expect { journey.finish(exit_station) }.to raise_error(
-          RuntimeError, "You failed to complete your last journey correctly. "\
-          "You will be charged £#{Journey::PENALTY_FARE} for this journey.")
+        expect { journey.finish(exit_station) }.to output(
+          "You failed to complete your last journey correctly. "\
+          "You will be charged £#{Journey::PENALTY_FARE} for this journey.\n").to_stderr
       end
 
       it 'sets fare to penalty fare' do
         expect { journey.finish(exit_station) rescue nil }.to change { journey.fare }.to eq(Journey::PENALTY_FARE)
-      end
-    end
-  end
-
-  describe '#complete?' do
-    context 'when in journey' do  
-      it 'returns false' do
-        journey.start(entry_station)
-        expect(journey).not_to be_complete
-      end
-    end
-
-    context 'when not in journey' do
-      it 'returns true' do
-        journey.start(entry_station)
-        journey.finish(exit_station)
-        expect(journey).to be_complete
       end
     end
   end
