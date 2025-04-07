@@ -24,7 +24,7 @@ describe OysterCard do
     end
 
     context 'when top up will exceed balance limit' do
-      it 'will throw an error' do
+      it 'will raise an error about exceeding maximum balance' do
         expect { oyster_card.top_up(91) }.to raise_error(
           RuntimeError, "This transaction would exceed the card limit of £#{OysterCard::MAX_BALANCE}. "\
           "The maximum you can top up is £#{OysterCard::MAX_BALANCE - oyster_card.balance}.")
@@ -37,32 +37,28 @@ describe OysterCard do
   end
 
   describe '#touch_in' do
-    context 'when card balance is above minimum for starting a journey' do
-      before (:each) do
-        oyster_card.top_up(OysterCard::MIN_FARE)
-      end
-
+    context 'when card has sufficient balance to start a journey' do
       it 'passes entry station to journey class' do
+        oyster_card.instance_variable_set(:@balance, 1)
         expect(journey).to receive(:start).with(entry_station)
         oyster_card.touch_in(entry_station)
       end
     end
 
-    context 'when card balance is below minimum for starting a journey' do
-      it 'will throw an error' do
-        expect { oyster_card.touch_in(entry_station) }.to raise_error(RuntimeError, 'Insufficient balance. Please top up.')
-      end
-
-      it 'will not start the journey' do
-        expect { oyster_card.touch_in(entry_station) rescue nil}.not_to change { oyster_card.current_journey }
+    context 'when card does not have sufficient balance to start a journey' do
+      it 'will raise an error about needing to top up' do
+        expect { oyster_card.touch_in(entry_station) }.to raise_error(
+          RuntimeError, 'Insufficient balance. Please top up.')
       end
     end
   end
 
   describe '#touch_out' do
     before(:each) do
-      oyster_card.top_up(OysterCard::MIN_FARE)
-      allow(journey).to receive(:start)
+      oyster_card.instance_variable_set(:@balance, 1)
+      allow(journey).to receive(:start).with(entry_station)
+      allow(journey).to receive(:finish).with(exit_station)
+      allow(journey).to receive(:fare).and_return(1)
       oyster_card.touch_in(entry_station)
     end
 
@@ -71,44 +67,8 @@ describe OysterCard do
       oyster_card.touch_out(exit_station)
     end
 
-    it 'saves completed journey in journey history' do
-      oyster_card.touch_out(exit_station)
-      expect(oyster_card.journey_history).to eq([{entry_station: entry_station, exit_station: exit_station}])
-    end
-
-    it 'sets entry station back to nil' do
-      oyster_card.touch_out(exit_station)
-      expect(oyster_card.current_journey[:entry_station]).to eq(nil)
-    end
-
-    it 'sets exit station back to nil' do
-      oyster_card.touch_out(exit_station)
-      expect(oyster_card.current_journey[:exit_station]).to eq(nil)
-    end
-
-    it "reduces card balance by £#{OysterCard::MIN_FARE}" do
-      expect { oyster_card.touch_out(exit_station) }.to change { oyster_card.balance }.by(-OysterCard::MIN_FARE)
-    end
-  end
-
-  describe '#in_journey?' do
-    before(:each) do
-      oyster_card.top_up(OysterCard::MIN_FARE)
-    end
-
-    context 'when in journey' do  
-      it 'returns true' do
-        oyster_card.touch_in(entry_station)
-        expect(oyster_card).to be_in_journey
-      end
-    end
-
-    context 'when not in journey' do
-      it 'returns false' do
-        oyster_card.touch_in(entry_station)
-        oyster_card.touch_out(exit_station)
-        expect(oyster_card).not_to be_in_journey
-      end
+    it "reduces card balance" do
+      expect { oyster_card.touch_out(exit_station) }.to change { oyster_card.balance }.by(-1)
     end
   end
 end

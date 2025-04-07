@@ -1,12 +1,11 @@
 require_relative 'journey'
 require_relative 'station'
 
-class
-  OysterCard
-    attr_reader :balance, :journey_history, :current_journey, :journey
+class OysterCard
+    attr_reader :balance, :journey
 
-  OPENING_BALANCE = 0
-  MIN_FARE = 1                    
+  OPENING_BALANCE = 0      
+  MIN_FARE = Journey::MIN_FARE  
   MAX_BALANCE = 90
 
   def initialize(journey)
@@ -23,12 +22,8 @@ class
   end
 
   def touch_out(station)
-    deduct(MIN_FARE)
     @journey.finish(station)
-  end
-
-  def in_journey?
-    @current_journey[:entry_station]
+    deduct_fare
   end
 
   private
@@ -39,7 +34,7 @@ class
       "The maximum you can top up is £#{MAX_BALANCE - @balance}.")
   end
 
-  def deduct(fare)
-    @balance -= fare
+  def deduct_fare
+    @balance -= @journey.fare
   end
 end
