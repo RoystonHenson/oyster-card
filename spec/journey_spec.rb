@@ -17,12 +17,6 @@ describe Journey do
     @file.close
   end
 
-  describe '.history' do
-    it 'is initialised as empty' do
-      expect(journey.class.history).to eq([])
-    end
-  end
-
   describe '#initialize' do
     it 'current journey has an entry station key' do
       expect(journey.current_journey.include?(:entry_station)).to eq(true)
@@ -93,17 +87,10 @@ describe Journey do
     end
 
     context 'when the current journey correctly has an entry station set' do
-      #use before loop
       it 'saves exit station when finishing journey' do
         journey.start(entry_station)
         journey.finish(exit_station)
-        expect(Journey.history.last[:exit_station]).to eq(exit_station)
-      end
-
-      xit 'saves completed journey to journey history' do
-        journey.start(entry_station)
-        journey.finish(exit_station)
-        expect(Journey.history).to eq([{entry_station: entry_station, exit_station: exit_station}])
+        expect(journey.last_journey.last[:exit_station]).to eq(exit_station)
       end
 
       it 'copies current journey to last journey before reset' do

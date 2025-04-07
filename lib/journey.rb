@@ -1,5 +1,4 @@
 class Journey
-  @@history = []
 
   MIN_FARE = 1
   PENALTY_FARE = 100
@@ -10,10 +9,6 @@ class Journey
     @current_journey = {entry_station: nil, exit_station: nil}
     @fare = MIN_FARE
     @last_journey = []
-  end
-
-  def self.history
-    @@history
   end
 
   def start(station)
@@ -59,6 +54,5 @@ class Journey
   def finish_journey(station)
     @current_journey[:exit_station] = station
     @last_journey << @current_journey
-    @@history << @current_journey
   end
 end
