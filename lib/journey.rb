@@ -3,26 +3,29 @@ class Journey
   MIN_FARE = 1
   PENALTY_FARE = 100
 
-  attr_reader :current_journey, :fare, :last_journey
+  attr_reader :current_journey, :fare, :recent_journeys
 
   def initialize
     @current_journey = {entry_station: nil, exit_station: nil}
     @fare = MIN_FARE
-    @last_journey = nil
+    @recent_journeys = []
   end
 
   def start(station)
     if entry_station_reset?
+      reset_recent_journeys
       start_journey(station)
     elsif @current_journey[:entry_station] == station
       raise('You have already touched in at this station!')
     else
-      apply_penalty
+      apply_penalty_fare
+      @recent_journeys << @current_journey.clone
+      @current_journey[:entry_station] = station
     end
   end
 
   def finish(station)
-    apply_penalty unless entry_station_set?
+    apply_penalty_fare unless entry_station_set?
     finish_journey(station)
     reset_current_journey
   end
@@ -42,7 +45,7 @@ class Journey
     @current_journey[:entry_station] = station 
   end
 
-  def apply_penalty
+  def apply_penalty_fare
     @fare = PENALTY_FARE
     warn "You failed to complete your last journey correctly. You will be charged £#{PENALTY_FARE} for this journey."
   end
@@ -53,6 +56,12 @@ class Journey
 
   def finish_journey(station)
     @current_journey[:exit_station] = station
-    @last_journey = @current_journey.clone
+    #p @recent_journeys
+    @recent_journeys << @current_journey.clone
+    #p @recent_journeys
+  end
+
+  def reset_recent_journeys
+    @recent_journeys = []
   end
 end
