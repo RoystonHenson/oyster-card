@@ -1,47 +1,68 @@
-As a customer,
-In order to use public transport,
-I want money on my card.
+# OysterCard___
 
 As a customer,
-In order to keep using public transport,
-I want to add money to my card.
-
-As a system maintainer,
-In order for the top-up to work correctly,
-I want top-up to only accept a number.
+I want money on my card,
+so I can use public transport.
 
 As a customer,
-In order to protect my money from theft or loss,
-I want a maximum limit (of £90) on my card.
+I want to add money to my card,
+so I can keep using public transport.
 
 As a customer,
-In order to pay for my journey,
-I need my fare deducted from my card.
+I want a maximum limit(£90) on my card,
+so I can protect my money from theft or loss.
 
 As a customer,
-In order to get through the barriers,
-I need to touch in and out.
+I want my fare deducted from my card,
+so I pay for my journey.
 
 As a customer,
-In order to pay for my journey,
-I need to have the minimum amount (£1) for a single journey.
+I want to touch in and out,
+so I can get through the barriers.
 
 As a customer,
-In order to pay for my journey,
-When my journey is complete, I need the correct amount deducted from my card.
+I want to have the minimum amount(£1)
+for a single journey on my card,
+so I can pay for my journey.
 
 As a customer,
-In order to pay for my journey,
-I need to know where I've travelled from.
+when my journey is complete and I touch out, I want the correct fare deducted from my card,
+so I can pay for my journey.
 
 As a customer,
-In order to pay for my journey,
-I need to know where I've travelled to.
+I want to see to all my previous trips,
+so I know where I have been.
 
 As a customer,
-In order to know where I have been,
-I want to see all my previous trips.
+I want journeys which were not completed correctly to also be recorded,
+so I know where I incurred a penalty charge.
+
+# Journey___
 
 As a customer,
-In order to know how far I have travelled,
-I want to know what zone a station is in.
+I want to know where I've travelled from,
+so I can pay the correct fare for my journey.
+
+As a customer,
+I want to know where I've travelled to,
+so I can pay the correct fare for my journey.
+
+As a customer,
+I want a penalty charge deducted if I fail to touch in or out,
+so I am charged correctly.
+
+# Station___
+
+As a customer,
+I want to know the name of a station,
+so I know where I've travelled from.
+
+As a customer,
+I want to know what zone a station is in,
+so I know how far I have travelled.
+
+---
+
+As a customer,
+I want to have the correct fare calculated,
+so I can be charged the correct amount.

@@ -12,37 +12,44 @@ class Journey
   end
 
   def start(station)
-    if entry_station_reset?
-      reset_recent_journeys
+    raise('You have already touched in at this station!') if @current_journey[:entry_station] == station
+    if entry_station_unset?
       start_journey(station)
-    elsif @current_journey[:entry_station] == station
-      raise('You have already touched in at this station!')
     else
-      apply_penalty_fare
-      @recent_journeys << @current_journey.clone
-      @current_journey[:entry_station] = station
+      start_penalty_journey(station)
     end
   end
 
   def finish(station)
-    apply_penalty_fare unless entry_station_set?
+    apply_penalty_fare if entry_station_unset?
     finish_journey(station)
     reset_current_journey
   end
-  
+
   private
 
-  def reset_current_journey
-    @current_journey = {entry_station: nil, exit_station: nil}
-  end
-
-  def entry_station_reset?
+  def entry_station_unset?
     @current_journey[:entry_station].nil?
   end
 
   def start_journey(station)
     @fare = MIN_FARE
-    @current_journey[:entry_station] = station 
+    reset_recent_journeys
+    set_entry_station(station)
+  end
+
+  def reset_recent_journeys
+    @recent_journeys = []
+  end
+
+  def set_entry_station(station)
+    @current_journey[:entry_station] = station
+  end
+
+  def start_penalty_journey(station)
+    apply_penalty_fare
+    save_journey
+    set_entry_station(station)
   end
 
   def apply_penalty_fare
@@ -50,18 +57,16 @@ class Journey
     warn "You failed to complete your last journey correctly. You will be charged £#{PENALTY_FARE} for this journey."
   end
 
-  def entry_station_set?
-    !@current_journey[:entry_station].nil?
+  def save_journey
+    @recent_journeys << @current_journey.clone
   end
 
   def finish_journey(station)
     @current_journey[:exit_station] = station
-    #p @recent_journeys
-    @recent_journeys << @current_journey.clone
-    #p @recent_journeys
+    save_journey
   end
 
-  def reset_recent_journeys
-    @recent_journeys = []
+  def reset_current_journey
+    @current_journey = {entry_station: nil, exit_station: nil}
   end
 end

@@ -36,11 +36,11 @@ class OysterCard
       "The maximum you can top up is £#{MAX_BALANCE - @balance}.")
   end
 
-  def deduct_fare
-    @balance -= @journey.fare
-  end
-
   def add_to_history
     @journey_history << @journey.recent_journeys
+  end
+  
+  def deduct_fare
+    @balance -= @journey.fare
   end
 end
