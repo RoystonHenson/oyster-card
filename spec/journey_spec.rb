@@ -2,9 +2,9 @@ require 'journey'
 
 describe Journey do
   let(:journey)       { Journey.new }
-  let(:entry_station) { double('entry station')}
-  let(:exit_station)  { double('exit_station')}
-  let(:third_station) { double('third station')}
+  let(:entry_station) { double(:entry_station)}
+  let(:exit_station)  { double(:exit_station)}
+  let(:third_station) { double(:third_station)}
 
   before(:each) do
     @original_stderr = $stderr
@@ -21,16 +21,13 @@ describe Journey do
     it 'current journey has an entry station key' do
       expect(journey.current_journey.include?(:entry_station)).to eq(true)
     end
-    it 'entry station key is nil' do
-      expect(journey.current_journey[:entry_station]).to eq(nil)
-    end
 
     it 'current journey has an exit station key' do
       expect(journey.current_journey.include?(:exit_station)).to eq(true)
     end
 
-    it 'exit station key is nil' do
-      expect(journey.current_journey[:exit_station]).to eq(nil)
+    it 'entry and exit stations in current journey are both set to nil' do
+      expect(journey.current_journey).to eq({entry_station: nil, exit_station: nil})
     end
 
     it 'sets fare to minimum fare' do
@@ -43,10 +40,8 @@ describe Journey do
   end
 
   describe '#start' do
-    before(:each) do |example|
-      unless example.metadata[:skip_before]
+    before(:each) do
       journey.start(entry_station)
-      end
     end
 
     context 'when entry and exit stations are correctly unset' do
@@ -54,13 +49,16 @@ describe Journey do
         expect(journey.current_journey[:entry_station]).to eq(entry_station)
       end
 
-      it 'sets fare to minimum fare', :skip_before do
-        journey.instance_variable_set(:@fare, 100)
-        journey.start(entry_station)
-        expect(journey.fare).to eq(Journey::MIN_FARE)
+      it 'sets fare back to minimum fare after a previous incomplete journey set fare to penalty fare' do
+        # Complete the normal journey started in the shared setup (before block)
+        journey.finish(exit_station) 
+
+        # Simulate an incomplete journey to trigger penalty fare
+        journey.finish(exit_station) 
+        expect { journey.start(entry_station) }.to change { journey.fare }.to eq(Journey::MIN_FARE)
       end
     end
-
+   
     context 'when entry station is already set to the current station' do
       it 'raises an error about already being touched in' do
         expect { journey.start(entry_station) }.to raise_error(
@@ -83,21 +81,20 @@ describe Journey do
 
   describe '#finish' do
     context 'when the current journey correctly has an entry station set' do
-      it 'saves exit station when finishing journey' do
+      before(:each) do
         journey.start(entry_station)
         journey.finish(exit_station)
+      end
+
+      it 'saves exit station when finishing journey' do
         expect(journey.last_journey[:exit_station]).to eq(exit_station)
       end
 
       it 'copies current journey to last journey before reset' do
-        journey.start(entry_station)
-        journey.finish(exit_station)
         expect(journey.last_journey).to eq({entry_station: entry_station, exit_station: exit_station})
       end
 
       it 'clears current journey after saving it to journey history' do
-        journey.start(entry_station)
-        journey.finish(exit_station)
         expect(journey.current_journey).to eq({entry_station: nil, exit_station: nil})
       end
     end
