@@ -6,7 +6,7 @@ describe OysterCard do
                                start: entry_station,
                                finish: exit_station,
                                fare: 1,
-                               last_journey: :test)}
+                               recent_journeys: :test)}
   let(:entry_station) { double(:entry_station) }
   let(:exit_station)  { double(:exit_station) }
 

@@ -41,6 +41,6 @@ class OysterCard
   end
 
   def add_to_history
-    @journey_history << @journey.last_journey
+    @journey_history << @journey.recent_journeys
   end
 end
