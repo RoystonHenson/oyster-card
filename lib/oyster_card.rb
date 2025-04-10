@@ -7,7 +7,7 @@ class OysterCard
   OPENING_BALANCE = 0      
   MAX_BALANCE = 90
 
-  def initialize(minimum_fare=Journey::MIN_FARE, journey=Journey.new)
+  def initialize(minimum_fare, journey)
     @balance = OPENING_BALANCE
     @journey_history = []
     @minimum_fare = minimum_fare
@@ -39,7 +39,7 @@ class OysterCard
   def add_to_history
     @journey_history << @journey.recent_journeys
   end
-  
+
   def deduct_fare
     @balance -= @journey.fare
   end

@@ -29,7 +29,7 @@ describe OysterCard do
     end
 
     it 'sets minimum_fare with an argument passed in' do
-      oyster_card = OysterCard.new(5)
+      oyster_card = OysterCard.new(5, journey)
       expect(oyster_card.minimum_fare).to eq(5)
     end
   end
