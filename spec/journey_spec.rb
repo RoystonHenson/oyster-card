@@ -6,36 +6,27 @@ describe Journey do
   let(:exit_station)  { double(:exit_station)}
   let(:third_station) { double(:third_station)}
 
-  before(:each) do
-    @original_stderr = $stderr
-    @file = File.open(File::NULL, 'w')
-    $stderr = @file
-  end
-
-  after(:each) do
-    $stderr = @original_stderr
-    @file.close
-  end
+  
 
   describe '#initialize' do
-    it 'current journey has an entry station key' do
-      expect(journey.current_journey.include?(:entry_station)).to eq(true)
-    end
-
-    it 'current journey has an exit station key' do
-      expect(journey.current_journey.include?(:exit_station)).to eq(true)
-    end
-
-    it 'entry and exit stations in current journey are both set to nil' do
-      expect(journey.current_journey).to eq({entry_station: nil, exit_station: nil})
-    end
-
     it 'sets fare to minimum fare' do
       expect(journey.fare).to eq(Journey::MIN_FARE)
     end
 
-    it 'sets recent journeys to empty array' do
-      expect(journey.recent_journeys).to eq([])
+    it 'has an entry station' do
+      expect(journey).to respond_to(:entry_station)
+    end
+
+    it 'entry station should be nil' do
+      expect(journey.entry_station).to be_nil
+    end
+
+    it 'has an exit station' do
+      expect(journey).to respond_to(:exit_station)
+    end
+
+    it 'exit station should be nil' do
+      expect(journey.exit_station).to be_nil
     end
   end
 
@@ -45,16 +36,6 @@ describe Journey do
     end
 
     context 'when previous journey was started and finished correctly' do
-      it 'resets recent journeys to an empty array when starting a new journey' do
-        journey.finish(exit_station)
-        journey.start(entry_station)
-        expect(journey.recent_journeys).to eq([])
-      end
-
-      it 'saves entry station to current journey' do
-        expect(journey.current_journey[:entry_station]).to eq(entry_station)
-      end
-
       it 'sets fare back to minimum fare after a previous incomplete journey set fare to penalty fare' do
         # Complete the normal journey started in the shared setup (before block)
         journey.finish(exit_station) 
