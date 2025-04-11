@@ -44,7 +44,25 @@ describe Journey do
     end
   end
 
-  xit 'sets fare to penalty fare' do
-    expect { journey.finish(exit_station) rescue nil }.to change { journey.fare }.to eq(Journey::PENALTY_FARE)
+  describe '#fare' do
+    context 'when a journey is finished correctly' do
+      it "fare is set to #{Journey::MIN_FARE}" do
+        journey.start(entry_station)
+        journey.finish(exit_station)
+        expect(journey.fare).to eq(Journey::MIN_FARE)
+      end
+    end 
+
+    context 'when a journey is finished with no entry station or exit station' do
+      it "sets fare to #{Journey::PENALTY_FARE}" do
+        journey.start(entry_station)
+        expect(journey.fare).to eq(Journey::PENALTY_FARE)
+      end
+
+      it "sets fare to #{Journey::PENALTY_FARE}" do
+      journey.finish(exit_station)
+      expect(journey.fare).to eq(Journey::PENALTY_FARE)
+      end
+    end
   end
 end

@@ -13,10 +13,16 @@ class Journey
 
   def start(station)
     @entry_station = station
+    set_fare
   end
 
   def finish(station)
     @exit_station = station
+    set_fare
+  end
+
+  def set_fare
+    @entry_station && @exit_station ? @fare = MIN_FARE : @fare = PENALTY_FARE
   end
 
   private
