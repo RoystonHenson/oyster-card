@@ -23,7 +23,9 @@ class JourneyLog
   end
 
   def finish(station)
-
+    apply_penalty_fare if entry_station_unset?
+    finish_journey(station)
+    reset_current_journey
   end
 
   private
@@ -56,6 +58,16 @@ class JourneyLog
   end
 
   def save_journey
-    @recent_journeys << @current_journey.clone
+    #@recent_journeys << current_journey.clone # remove recent?
+    @history << @current_journey.clone 
+  end
+
+  def finish_journey(station)
+    @current_journey[:exit_station] = station
+    save_journey
+  end
+
+  def reset_current_journey
+    @current_journey = {entry_station: nil, exit_station: nil}
   end
 end

@@ -54,7 +54,7 @@ describe JourneyLog do
     end
 
     context 'when previous journey was started and finished correctly' do
-      xit 'resets recent journeys to an empty array when starting a new journey' do
+      it 'resets recent journeys to an empty array when starting a new journey' do
         log.finish(exit_station)
         log.start(entry_station)
         expect(log.recent_journeys).to eq([])
@@ -78,9 +78,9 @@ describe JourneyLog do
 
     # User did not complete previous journey correctly
     context 'when previous journey was started but not finished correctly' do
-      it 'saves previous incomplete journey to recent journeys' do
+      it 'saves previous incomplete journey to history' do
         log.start(third_station)
-        expect(log.recent_journeys).to eq([{entry_station: entry_station, exit_station: nil}])
+        expect(log.history).to eq([{entry_station: entry_station, exit_station: nil}])
       end
 
       it 'saves last entry station entered to current journey' do
@@ -94,19 +94,50 @@ describe JourneyLog do
           "You will be charged £#{Journey::PENALTY_FARE} for this journey.\n").to_stderr
       end
 
-      it 'saves previously incompleted journey to recent journeys' do
+      it 'saves previously incompleted journey to history' do
         log.start(third_station)
-        expect(log.recent_journeys).to eq([{entry_station: entry_station, exit_station: nil}])
+        expect(log.history).to eq([{entry_station: entry_station, exit_station: nil}])
       end
     end
   end
 
-  xdescribe '#finish' do
-    it 'saves the finished journey to history' do
-      log.start(entry_station)
-      log.finish(exit_station)
-      expect(log.history).to eq([{start: entry_station, finish: exit_station}])
-    end
-  end
+  describe '#finish' do
+    context 'when the current journey was completed correctly' do
+      before(:each) do
+        log.start(entry_station)
+        log.finish(exit_station)
+      end
 
+      it 'saves the finished journey to history' do
+        expect(log.history).to eq([{entry_station: entry_station, exit_station: exit_station}])
+      end
+
+      it 'clears current journey after saving it to journey history' do
+        expect(log.current_journey).to eq({entry_station: nil, exit_station: nil})
+      end
+    end
+
+    context 'previous journey was not finished correctly and current journey is finished correctly' do
+      it 'saves previous incomplete journey and current journey to recent journeys', :tag => true do
+        log.start(entry_station)
+        log.start(third_station)
+        log.finish(exit_station)
+        expect(log.history).to eq([{entry_station: entry_station, exit_station: nil},
+                                               {entry_station: third_station, exit_station: exit_station}])
+      end
+    end
+
+    context 'when the current journey was not started correctly' do
+      it 'outputs a warning about penalty fare' do
+        expect { log.finish(exit_station) }.to output(
+          "You failed to complete your last journey correctly. "\
+          "You will be charged £#{Journey::PENALTY_FARE} for this journey.\n").to_stderr
+      end
+    end
+
+      it 'saves incomplete journey to history' do
+        log.finish(exit_station)
+        expect(log.history).to eq([{entry_station: nil, exit_station: exit_station}])
+      end
+    end
 end
