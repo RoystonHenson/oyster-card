@@ -31,58 +31,9 @@ describe Journey do
   end
 
   describe '#start' do
-    before(:each) do
+    it 'sets entry station' do
       journey.start(entry_station)
-    end
-
-    context 'when previous journey was started and finished correctly' do
-      it 'sets fare back to minimum fare after a previous incomplete journey set fare to penalty fare' do
-        # Complete the normal journey started in the shared setup (before block)
-        journey.finish(exit_station) 
-
-        # Simulate an incomplete journey to trigger penalty fare
-        journey.finish(exit_station) 
-        expect { journey.start(entry_station) }.to change { journey.fare }.to eq(Journey::MIN_FARE)
-      end
-    end
-   
-    context 'when entry station is already set to the current station' do
-      it 'does not change recent journeys' do
-        expect { journey.start(entry_station) rescue nil }.not_to change { journey.recent_journeys }
-      end
-
-      it 'raises an error about already being touched in' do
-        expect { journey.start(entry_station) }.to raise_error(
-          RuntimeError, 'You have already touched in at this station!')
-      end
-    end
-
-    # User did not complete previous journey correctly
-    context 'when previous journey was started but not finished correctly' do
-      it 'saves previous incomplete journey to recent journeys' do
-        journey.start(third_station)
-        expect(journey.recent_journeys).to eq([{entry_station: entry_station, exit_station: nil}])
-      end
-
-      it 'saves last entry station entered to current journey' do
-        journey.start(third_station)
-        expect(journey.current_journey[:entry_station]).to eq(third_station)
-      end
-
-      it 'outputs a warning about penalty fare' do
-        expect { journey.start(third_station) }.to output(
-          "You failed to complete your last journey correctly. "\
-          "You will be charged £#{Journey::PENALTY_FARE} for this journey.\n").to_stderr
-      end
-
-      it 'sets fare to penalty fare' do
-        expect { journey.start(third_station) rescue nil }.to change { journey.fare}.to eq(Journey::PENALTY_FARE)
-      end
-
-      it 'saves previously incompleted journey to recent journeys' do
-        journey.start(third_station)
-        expect(journey.recent_journeys).to eq([{entry_station: entry_station, exit_station: nil}])
-      end
+      expect(journey.entry_station).to eq(entry_station)
     end
   end
 

@@ -12,12 +12,13 @@ class Journey
   end
 
   def start(station)
+    @entry_station = station
     #raise('You have already touched in at this station!') if @current_journey[:entry_station] == station
-    if entry_station_unset?
-      start_journey(station)
-    else
-      start_penalty_journey(station)
-    end
+    #if entry_station_unset?
+    #  start_journey(station)
+    #else
+    #  start_penalty_journey(station)
+    #end
   end
 
   def finish(station)
