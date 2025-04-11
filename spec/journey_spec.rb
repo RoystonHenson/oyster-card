@@ -4,12 +4,9 @@ describe Journey do
   let(:journey)       { Journey.new }
   let(:entry_station) { double(:entry_station)}
   let(:exit_station)  { double(:exit_station)}
-  let(:third_station) { double(:third_station)}
-
-  
 
   describe '#initialize' do
-    it 'sets fare to minimum fare' do
+    it 'fare is set to minimum fare' do
       expect(journey.fare).to eq(Journey::MIN_FARE)
     end
 
@@ -17,7 +14,7 @@ describe Journey do
       expect(journey).to respond_to(:entry_station)
     end
 
-    it 'entry station should be nil' do
+    it 'entry station is set to nil' do
       expect(journey.entry_station).to be_nil
     end
 
@@ -25,7 +22,7 @@ describe Journey do
       expect(journey).to respond_to(:exit_station)
     end
 
-    it 'exit station should be nil' do
+    it 'exit station is set to nil' do
       expect(journey.exit_station).to be_nil
     end
   end
@@ -60,8 +57,8 @@ describe Journey do
       end
 
       it "sets fare to #{Journey::PENALTY_FARE}" do
-      journey.finish(exit_station)
-      expect(journey.fare).to eq(Journey::PENALTY_FARE)
+        journey.finish(exit_station)
+        expect(journey.fare).to eq(Journey::PENALTY_FARE)
       end
     end
   end

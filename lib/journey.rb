@@ -22,13 +22,12 @@ class Journey
   end
 
   def set_fare
-    @entry_station && @exit_station ? @fare = MIN_FARE : @fare = PENALTY_FARE
+    complete? ? @fare = MIN_FARE : @fare = PENALTY_FARE
   end
 
   private
-
-  def apply_penalty_fare
-    @fare = PENALTY_FARE
+  
+  def complete?
+    !!@entry_station && !!@exit_station
   end
-
 end
