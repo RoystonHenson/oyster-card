@@ -1,8 +1,5 @@
-#require_relative 'journey'
-#require_relative 'station'
-
 class JourneyLog
-  attr_reader :journey_class, :current_journey, :history
+  attr_reader :journey_class, :current_journey
 
   def initialize(journey_class)
     @journey_class = journey_class
@@ -21,7 +18,13 @@ class JourneyLog
     @current_journey = nil
   end
 
-  def return_history
-    @history
+  def history
+    safe_history
+  end
+
+  private
+
+  def safe_history
+    @history.clone
   end
 end

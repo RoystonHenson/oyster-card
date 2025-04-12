@@ -54,9 +54,13 @@ describe JourneyLog do
     end
   end
 
-  describe '#return_history' do
+  describe '#history' do
     it 'returns journey history' do
-      expect(log.return_history).to eq(log.history)
+      expect(log.instance_variable_get(:@history)).to eq(log.history)
+    end
+
+    it 'is a copy of history' do
+      expect(log.instance_variable_get(:@history)).not_to be(log.history)
     end
   end
 end
