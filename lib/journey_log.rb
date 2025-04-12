@@ -20,6 +20,8 @@ class JourneyLog
     @history << @current_journey
     @current_journey = nil
   end
-  
-  # returning a list of journeys
+
+  def return_history
+    @history
+  end
 end

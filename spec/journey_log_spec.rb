@@ -53,4 +53,10 @@ describe JourneyLog do
       expect(log.current_journey).to eq(nil)
     end
   end
+
+  describe '#return_history' do
+    it 'returns journey history' do
+      expect(log.return_history).to eq(log.history)
+    end
+  end
 end
