@@ -1,12 +1,16 @@
+require_relative 'fare_constants'
+
 class OysterCard
-  attr_reader :balance, :minimum_fare, :journey_log
+  include FareConstants
+
+  attr_reader :balance, :fare, :journey_log
 
   OPENING_BALANCE = 0      
   MAX_BALANCE = 90
 
-  def initialize(minimum_fare, journey_log)
+  def initialize(journey_log)
     @balance = OPENING_BALANCE
-    @minimum_fare = minimum_fare
+    @fare = MIN_FARE
     @journey_log = journey_log
   end
 
@@ -15,7 +19,7 @@ class OysterCard
   end
 
   def touch_in(station)
-    @balance >= @minimum_fare ? @journey_log.start(station) : raise('Insufficient balance. Please top up.')
+    @balance >= @fare ? @journey_log.start(station) : raise('Insufficient balance. Please top up.')
   end
 
   def touch_out(station)
@@ -32,6 +36,6 @@ class OysterCard
   end
 
   def deduct_fare
-    @balance -= @minimum_fare
+    @balance -= @fare
   end
 end

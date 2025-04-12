@@ -2,7 +2,7 @@ require 'oyster_card'
 require 'journey_log'
 
 describe OysterCard do
-  let(:oyster_card)   { OysterCard.new(1, journey_log) }
+  let(:oyster_card)   { OysterCard.new(journey_log) }
   let(:journey_log)   { instance_double(JourneyLog,
                                         start: entry_station,
                                         finish: exit_station)}
@@ -10,7 +10,7 @@ describe OysterCard do
   let(:exit_station)  { double(:exit_station) }
 
   describe '#initialize' do
-    it 'initialises opening balance as 0' do
+    it 'sets opening balance as 0' do
       expect(oyster_card.balance).to eq(0)
     end
 
@@ -18,14 +18,8 @@ describe OysterCard do
       expect(oyster_card.journey_log).to eq(journey_log)
     end
     
-    it 'initialises minimum_fare when no argument passed in' do
-      stub_const('Journey::MIN_FARE', 1)
-      expect(oyster_card.minimum_fare).to eq(1)
-    end
-
-    it 'initialises minimum_fare when argument passed in' do
-      oyster_card = OysterCard.new(5, journey_log)
-      expect(oyster_card.minimum_fare).to eq(5)
+    it 'sets fare to minimum fare' do
+      expect(oyster_card.fare).to eq(FareConstants::MIN_FARE)
     end
   end
 
