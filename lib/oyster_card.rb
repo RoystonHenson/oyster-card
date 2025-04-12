@@ -19,7 +19,7 @@ class OysterCard
   end
 
   def touch_in(station)
-    @balance >= @fare ? @journey_log.start(station) : raise('Insufficient balance. Please top up.')
+    @balance >= MIN_FARE ? @journey_log.start(station) : raise('Insufficient balance. Please top up.')
   end
 
   def touch_out(station)

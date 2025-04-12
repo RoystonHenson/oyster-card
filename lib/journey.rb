@@ -2,14 +2,11 @@ require_relative 'fare_constants'
 
 class Journey
   include FareConstants
-  #MIN_FARE = 1
-  #PENALTY_FARE = 100
 
-  attr_reader :current_journey, :fare, :recent_journeys # :fares,
+  attr_reader :current_journey, :fare, :recent_journeys
 
   def initialize
     @current_journey = {entry_station: nil, exit_station: nil}
-    #@fares = {minimum_fare: MIN_FARE, penalty_fare: PENALTY_FARE}
     @fare = MIN_FARE
     @recent_journeys = []
   end

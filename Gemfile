@@ -8,4 +8,5 @@ group :development, :test do
   gem 'simplecov', require: false
   gem 'simplecov-lcov', '~> 0.8.0'
   gem 'coveralls_reborn', require: false
+  gem 'rake', '~> 13.2', '>= 13.2.1'
 end

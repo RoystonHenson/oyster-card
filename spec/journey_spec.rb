@@ -30,10 +30,6 @@ describe Journey do
       expect(journey.current_journey).to eq({entry_station: nil, exit_station: nil})
     end
 
-    #it 'has a couple of fares' do
-    #  expect(journey.fares).to eq({minimum_fare: Journey::MIN_FARE, penalty_fare: Journey::PENALTY_FARE})
-    #end
-
     it 'sets fare to minimum fare' do
       expect(journey.fare).to eq(FareConstants::MIN_FARE)
     end
