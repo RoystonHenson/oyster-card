@@ -3,11 +3,12 @@ class Journey
   MIN_FARE = 1
   PENALTY_FARE = 100
 
-  attr_reader :current_journey, :fare, :recent_journeys
+  attr_reader :current_journey, :fares, :current_fare, :recent_journeys
 
   def initialize
     @current_journey = {entry_station: nil, exit_station: nil}
-    @fare = MIN_FARE
+    @fares = {minimum_fare: MIN_FARE, penalty_fare: PENALTY_FARE}
+    @current_fare = @fares[:minimum_fare]
     @recent_journeys = []
   end
 
@@ -33,7 +34,7 @@ class Journey
   end
 
   def start_journey(station)
-    @fare = MIN_FARE
+    @current_fare = MIN_FARE
     reset_recent_journeys
     set_entry_station(station)
   end
@@ -53,7 +54,7 @@ class Journey
   end
 
   def apply_penalty_fare
-    @fare = PENALTY_FARE
+    @current_fare = PENALTY_FARE
     warn "You failed to complete your last journey correctly. You will be charged £#{PENALTY_FARE} for this journey."
   end
 

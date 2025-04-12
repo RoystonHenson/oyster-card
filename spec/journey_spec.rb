@@ -30,8 +30,12 @@ describe Journey do
       expect(journey.current_journey).to eq({entry_station: nil, exit_station: nil})
     end
 
-    it 'sets fare to minimum fare' do
-      expect(journey.fare).to eq(Journey::MIN_FARE)
+    it 'has a couple of fares' do
+      expect(journey.fares).to eq({minimum_fare: Journey::MIN_FARE, penalty_fare: Journey::PENALTY_FARE})
+    end
+
+    it 'sets current fare to minimum fare' do
+      expect(journey.current_fare).to eq(journey.fares[:minimum_fare])
     end
 
     it 'sets recent journeys to empty array' do
@@ -61,7 +65,7 @@ describe Journey do
 
         # Simulate an incomplete journey to trigger penalty fare
         journey.finish(exit_station) 
-        expect { journey.start(entry_station) }.to change { journey.fare }.to eq(Journey::MIN_FARE)
+        expect { journey.start(entry_station) }.to change { journey.current_fare }.to eq(Journey::MIN_FARE)
       end
     end
    
@@ -95,7 +99,7 @@ describe Journey do
       end
 
       it 'sets fare to penalty fare' do
-        expect { journey.start(third_station) rescue nil }.to change { journey.fare}.to eq(Journey::PENALTY_FARE)
+        expect { journey.start(third_station) rescue nil }.to change { journey.current_fare}.to eq(Journey::PENALTY_FARE)
       end
 
       it 'saves previously incompleted journey to recent journeys' do
@@ -143,7 +147,7 @@ describe Journey do
       end
 
       it 'sets fare to penalty fare' do
-        expect { journey.finish(exit_station) rescue nil }.to change { journey.fare }.to eq(Journey::PENALTY_FARE)
+        expect { journey.finish(exit_station) rescue nil }.to change { journey.current_fare }.to eq(Journey::PENALTY_FARE)
       end
 
       it 'saves incomplete journey to recent journeys' do
