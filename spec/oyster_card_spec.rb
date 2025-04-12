@@ -1,35 +1,30 @@
 require 'oyster_card'
+require 'journey_log'
 
 describe OysterCard do
-  let(:oyster_card)   { OysterCard.new(1, journey) }
-  let(:journey)       { double(Journey,
-                               start: entry_station,
-                               finish: exit_station,
-                               fare: 1,
-                               recent_journeys: :test)}
+  let(:oyster_card)   { OysterCard.new(1, journey_log) }
+  let(:journey_log)   { instance_double(JourneyLog,
+                                        start: entry_station,
+                                        finish: exit_station)}
   let(:entry_station) { double(:entry_station) }
   let(:exit_station)  { double(:exit_station) }
 
   describe '#initialize' do
-    it 'has an opening balance of 0' do
+    it 'initialises opening balance as 0' do
       expect(oyster_card.balance).to eq(0)
     end
 
-    it 'has an empty journey history' do
-      expect(oyster_card.journey_history).to eq([])
-    end
-
-    it 'injects an instance of the journey class to journey' do
-      expect(oyster_card.journey).to eq(journey)
+    it 'injects an instance of the journey log class to journey log' do
+      expect(oyster_card.journey_log).to eq(journey_log)
     end
     
-    it 'sets minimum_fare without an argument passed in' do
+    it 'initialises minimum_fare when no argument passed in' do
       stub_const('Journey::MIN_FARE', 1)
       expect(oyster_card.minimum_fare).to eq(1)
     end
 
-    it 'sets minimum_fare with an argument passed in' do
-      oyster_card = OysterCard.new(5, journey)
+    it 'initialises minimum_fare when argument passed in' do
+      oyster_card = OysterCard.new(5, journey_log)
       expect(oyster_card.minimum_fare).to eq(5)
     end
   end
@@ -42,7 +37,7 @@ describe OysterCard do
     end
 
     context 'when top up will exceed balance limit' do
-      it 'will raise an error about exceeding maximum balance' do
+      it 'raises error about exceeding maximum balance' do
         expect { oyster_card.top_up(91) }.to raise_error(
           RuntimeError, "This transaction would exceed the card limit of £#{OysterCard::MAX_BALANCE}. "\
           "The maximum you can top up is £#{OysterCard::MAX_BALANCE - oyster_card.balance}.")
@@ -58,13 +53,13 @@ describe OysterCard do
     context 'when card has sufficient balance to start a journey' do
       it 'passes entry station to journey class' do
         oyster_card.top_up(1)
-        expect(journey).to receive(:start).with(entry_station)
+        expect(journey_log).to receive(:start).with(entry_station)
         oyster_card.touch_in(entry_station)
       end
     end
 
     context 'when card does not have sufficient balance to start a journey' do
-      it 'will raise an error about needing to top up' do
+      it 'raises error about needing top up' do
         expect { oyster_card.touch_in(entry_station) }.to raise_error(
           RuntimeError, 'Insufficient balance. Please top up.')
       end
@@ -78,16 +73,12 @@ describe OysterCard do
     end
 
     it 'passes exit station to journey class' do
-      expect(journey).to receive(:finish).with(exit_station)
+      expect(journey_log).to receive(:finish).with(exit_station)
       oyster_card.touch_out(exit_station)
     end
 
     it "reduces card balance" do
       expect { oyster_card.touch_out(exit_station) }.to change { oyster_card.balance }.by(-1)
-    end
-
-    it 'saves the finished journey to it\'s history' do
-      expect { oyster_card.touch_out(exit_station) }.to change { oyster_card.journey_history }.to eq([:test])
     end
   end
 end
