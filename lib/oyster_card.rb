@@ -3,14 +3,13 @@ require_relative 'fare_constants'
 class OysterCard
   include FareConstants
 
-  attr_reader :balance, :fare, :journey_log
+  attr_reader :balance, :journey_log
 
   OPENING_BALANCE = 0      
   MAX_BALANCE = 90
 
   def initialize(journey_log)
     @balance = OPENING_BALANCE
-    @fare = MIN_FARE
     @journey_log = journey_log
   end
 
@@ -36,6 +35,6 @@ class OysterCard
   end
 
   def deduct_fare
-    @balance -= @fare
+    @balance -= @journey_log.fares.slice!(0, @journey_log.fares.size).sum
   end
 end

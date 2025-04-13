@@ -5,7 +5,8 @@ describe OysterCard do
   let(:oyster_card)   { OysterCard.new(journey_log) }
   let(:journey_log)   { instance_double(JourneyLog,
                                         start: entry_station,
-                                        finish: exit_station)}
+                                        finish: exit_station,
+                                        fares: [FareConstants::MIN_FARE])}
   let(:entry_station) { double(:entry_station) }
   let(:exit_station)  { double(:exit_station) }
 
@@ -72,7 +73,7 @@ describe OysterCard do
     end
 
     it "reduces card balance" do
-      expect { oyster_card.touch_out(exit_station) }.to change { oyster_card.balance }.by(-1)
+      expect { oyster_card.touch_out(exit_station) }.to change { oyster_card.balance }.by(-FareConstants::MIN_FARE)
     end
   end
 end
