@@ -4,10 +4,10 @@ class Journey
   include FareConstants
 
   attr_reader :entry_station, :exit_station, :fare
-  
+
   def initialize
     @entry_station = nil
-    @exit_station
+    @exit_station = nil
   end
 
   def start(station)
@@ -20,13 +20,13 @@ class Journey
     calculate_fare
   end
 
-  def complete?
-    !!@entry_station && !!@exit_station
-  end
-  
+  private
+
   def calculate_fare
     complete? ? @fare = MIN_FARE : @fare = PENALTY_FARE
   end
-end
 
-# refactored, not committed
+  def complete?
+    !!@entry_station && !!@exit_station
+  end
+end

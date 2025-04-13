@@ -10,25 +10,22 @@ describe Journey do
       expect(journey).to respond_to(:entry_station)
     end
 
-    it 'entry stattion to be nil' do
+    it 'entry station to be nil' do
       expect(journey.entry_station).to eq(nil)
     end
 
-    it 'current journey has an exit station key' do
-      expect(journey). to respond_to(:exit_station)
+    it 'exit station to be initialised' do
+      expect(journey).to respond_to(:exit_station)
     end
 
-    it 'entry and exit stations in current journey are both set to nil' do
+    it 'exit station to be nil' do
       expect(journey.exit_station).to eq(nil)
     end
   end
 
   describe '#start' do
-    before(:each) do
-      journey.start(entry_station)
-    end
-
     it 'saves entry station to current journey' do
+      journey.start(entry_station)
       expect(journey.entry_station).to eq(entry_station)
     end
   end
@@ -40,31 +37,7 @@ describe Journey do
         expect(journey.exit_station).to eq(exit_station)
       end
     end
-  end
 
-  describe '#complete?' do
-    context 'when journey is complete' do
-      it 'returns true' do
-        journey.start(entry_station)
-        journey.finish(exit_station)
-        expect(journey.complete?).to eq(true)
-      end
-    end
-
-    context 'when journey is not complete' do
-      it 'returns false when no exit station' do
-        journey.start(entry_station)
-        expect(journey.complete?).to eq(false)
-      end
-      
-      it 'returns false when no entry station' do
-        journey.finish(exit_station)
-        expect(journey.complete?).to eq(false)
-      end
-    end
-  end
-
-  describe '#calculate_fare' do
     context 'when finished journey is complete' do
       it 'sets fare to minimum fare' do
         journey.start(entry_station)
